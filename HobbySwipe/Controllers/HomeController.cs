@@ -1,6 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using HobbySwipe.Models;
+using OpenAI.Interfaces;
+using OpenAI.ObjectModels;
+using OpenAI.ObjectModels.RequestModels;
+using OpenAI.Managers;
+using OpenAI;
+using OpenAI.ObjectModels.RequestModels;
 
 namespace HobbySwipe.Controllers
 {
@@ -13,12 +19,34 @@ namespace HobbySwipe.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
+            var openAiService = new OpenAIService(new OpenAiOptions()
+            {
+                ApiKey = "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"
+            });
+
+            var completionResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
+            {
+                Messages = new List<ChatMessage>
+                {
+                    ChatMessage.FromSystem("You are a helpful assistant."),
+                    ChatMessage.FromUser("Who won the world series in 2020?"),
+                    ChatMessage.FromAssistant("The Los Angeles Dodgers won the World Series in 2020."),
+                    ChatMessage.FromUser("Where was it played?")
+                },
+                Model = OpenAI.ObjectModels.Models.ChatGpt3_5Turbo,
+                MaxTokens = 50//optional
+            });
+            if (completionResult.Successful)
+            {
+                Console.WriteLine(completionResult.Choices.First().Message.Content);
+            }
+
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Discover()
         {
             return View();
         }

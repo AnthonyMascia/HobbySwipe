@@ -1,0 +1,100 @@
+﻿@*<div class="row steps-list">
+                <div class="col-xl-4 steps-item" data-aos="fade-right">
+                    <div class="steps-steps-number-wrap">
+                        <div class="steps-number text-secondary">1</div>
+                        <div class="steps-cover-wrap">
+                            <div class="steps-cover"></div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="icon text-primary"><i class="fa-regular fa-lightbulb"></i></div>
+                        <h2 class="text-secondary">Discover</h2>
+                        <p>Start by telling us a bit about yourself. This might include your current interests, past hobbies, and how much free time you have..</p>
+                    </div>
+                </div>
+                <div class="col-xl-4 steps-item" data-aos="fade-right" data-aos-delay="200">
+                    <div class="steps-steps-number-wrap">
+                        <div class="steps-number text-secondary">2</div>
+                        <div class="steps-cover-wrap">
+                            <div class="steps-cover"></div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="icon text-primary"><i class="fa-regular fa-map"></i></div>
+                        <h2 class="text-secondary">Explore</h2>
+                        <p>Use our unique hobby discovery tool to explore a wide range of activities. You can swipe right if you're interested, or swipe left to pass. Our smart algorithm learns from your choices to recommend hobbies that are more likely to suit your preferences.</p>
+                    </div>
+                </div>
+                <div class="col-xl-4 steps-item" data-aos="fade-right" data-aos-delay="400">
+                    <div class="steps-steps-number-wrap">
+                        <div class="steps-number text-secondary">3</div>
+                        <div class="steps-cover-wrap">
+                            <div class="steps-cover"></div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="icon iconAirplane text-primary"><i class="fa-solid fa-flask"></i></div>
+                        <h2 class="text-secondary">Immerse</h2>
+                        <p>Once you've swiped right on a hobby, you'll get access to a wealth of information. This includes tutorial videos, beginner's guides, and user reviews to help you get started.</p>
+                    </div>
+                </div>
+            </div> *@
+
+
+
+
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<link rel="stylesheet" href="~/lib/glide/dist/css/glide.core.min.css">
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<link rel="stylesheet" href="~/css/how-it-works.css">
+
+<style rel="stylesheet">
+    .glide__container {
+        border: none;
+    }
+
+    #typed {
+        font-family: 'Permanent Marker', cursive;
+        font-size: 2.8rem;
+    }
+
+    .typed-cursor {
+        color: #ed5a14;
+        margin-left: 5px;
+    }
+</style>
+
+<!-- Hero -->
+@section Header {
+    <div id="header">
+        <div class="container d-flex align-items-center">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <h1 class="MuiTypography-root MuiTypography-h1 css-8t8jk6"><span class="css-8dw2et">Move faster</span> with intuitive React UI tools</h1>
+                    <p class="MuiTypography-root MuiTypography-body1 css-1hu40t9">MUI offers a comprehensive suite of UI tools to help you ship new features faster. Start with Material UI, our fully-loaded component library, or bring your own design system to our production-ready components.</p>
+                    <a class="btn btn-lg btn-secondary">Get Started &lt;</a>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <h1 class="MuiTypography-root MuiTypography-h1 css-8t8jk6"><span class="css-8dw2et">Move faster</span> with intuitive React UI tools</h1>
+                    <p class="MuiTypography-root MuiTypography-body1 css-1hu40t9">MUI offers a comprehensive suite of UI tools to help you ship new features faster. Start with Material UI, our fully-loaded component library, or bring your own design system to our production-ready components.</p>
+                    <a class="btn btn-lg btn-secondary">Get Started &lt;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- End Hero -->
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script type="text/javascript" src="~/lib/glide/dist/glide.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script type="text/javascript" src="~/js/home.js"></script>
+}
+
+

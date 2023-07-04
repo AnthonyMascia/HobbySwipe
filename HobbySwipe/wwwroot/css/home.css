@@ -1,0 +1,147 @@
+﻿/* Typography Settings */
+#typed {
+    color: var(--primary-color);
+}
+
+.typed-cursor {
+    color: var(--accent-color);
+    margin-left: 5px;
+}
+
+/* Carousel Container Setting */
+.glide__container {
+    border: none;
+}
+
+/* Section Divider Styles */
+.slanted-divider.bg-1 {
+    border-bottom: 100px solid var(--background-color-1);
+}
+
+.slanted-divider.bg-2 {
+    border-bottom: 100px solid var(--background-color-2);
+}
+
+.slanted-divider.left {
+    border-left: 100vw solid transparent;
+}
+
+.slanted-divider.right {
+    border-right: 100vw solid transparent;
+}
+
+/* Style for Step Marker */
+.circle {
+    font-weight: bold;
+    padding: 15px 20px;
+    border-radius: 50%;
+    background-color: #ED8D8D;
+    color: #4D4545;
+    max-height: 50px;
+    z-index: 2;
+}
+
+/* How it works section */
+.how-it-works.row {
+    display: flex;
+}
+
+    .how-it-works.row .col-2 {
+        display: inline-flex;
+        align-self: stretch;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+        /* "How it works" Connection Lines */
+        .how-it-works.row .col-2::after {
+            content: '';
+            position: absolute;
+            border-left: 3px solid #ED8D8D;
+            z-index: 1;
+        }
+
+        .how-it-works.row .col-2.bottom::after {
+            height: 50%;
+            left: 50%;
+            top: 50%;
+        }
+
+        .how-it-works.row .col-2.full-right::after {
+            height: 100%;
+            left: calc(50% - 3px);
+        }
+
+        .how-it-works.row .col-2.full-left::after {
+            height: 100%;
+            left: 50%;
+        }
+
+        .how-it-works.row .col-2.top-left::after {
+            height: 50%;
+            left: 50%;
+            top: 0;
+        }
+
+        .how-it-works.row .col-2.top-right::after {
+            height: 50%;
+            left: calc(50% - 3px);
+            top: 0;
+        }
+
+/* Timeline Styles */
+.timeline div {
+    padding: 0;
+    height: 40px;
+}
+
+.timeline hr {
+    border-top: 3px solid #ED8D8D;
+    margin: 0;
+    top: 17px;
+    position: relative;
+    opacity: 1;
+}
+
+.timeline .col-2 {
+    display: flex;
+    overflow: hidden;
+}
+
+.timeline .corner {
+    border: 3px solid #ED8D8D;
+    width: 100%;
+    position: relative;
+    border-radius: 15px;
+}
+
+.timeline .top-right {
+    left: 50%;
+    top: -50%;
+}
+
+.timeline .left-bottom {
+    left: -50%;
+    top: calc(50% - 3px);
+}
+
+.timeline .top-left {
+    left: -50%;
+    top: -50%;
+}
+
+.timeline .right-bottom {
+    left: 50%;
+    top: calc(50% - 3px);
+}
+
+.timeline::before {
+    display: none;
+}
+
+@media (min-width: 1140px) {
+    #timeline_ctnr {
+        max-width: 70%;
+    }
+}
