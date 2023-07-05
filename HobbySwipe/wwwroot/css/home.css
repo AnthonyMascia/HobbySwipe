@@ -1,10 +1,10 @@
 ﻿/* Typography Settings */
 #typed {
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 .typed-cursor {
-    color: var(--accent-color);
+    color: var(--primary-color);
     margin-left: 5px;
 }
 
@@ -14,12 +14,11 @@
 }
 
 /* Section Divider Styles */
-.slanted-divider.bg-1 {
-    border-bottom: 100px solid var(--background-color-1);
+.slanted-divider.top {
+    border-top: 100px solid transparent;
 }
-
-.slanted-divider.bg-2 {
-    border-bottom: 100px solid var(--background-color-2);
+.slanted-divider.bottom {
+    border-bottom: 100px solid transparent;
 }
 
 .slanted-divider.left {
@@ -30,12 +29,20 @@
     border-right: 100vw solid transparent;
 }
 
+.slanted-divider.bg-1 {
+    border-block-color: var(--background-color-1);
+}
+
+.slanted-divider.bg-2 {
+    border-block-color: var(--background-color-2);
+}
+
 /* Style for Step Marker */
 .circle {
     font-weight: bold;
     padding: 15px 20px;
     border-radius: 50%;
-    background-color: #ED8D8D;
+    background-color: var(--secondary-color);
     color: #4D4545;
     max-height: 50px;
     z-index: 2;
@@ -58,7 +65,7 @@
         .how-it-works.row .col-2::after {
             content: '';
             position: absolute;
-            border-left: 3px solid #ED8D8D;
+            border-left: 3px solid var(--secondary-color);
             z-index: 1;
         }
 
@@ -97,7 +104,7 @@
 }
 
 .timeline hr {
-    border-top: 3px solid #ED8D8D;
+    border-top: 3px solid var(--secondary-color);
     margin: 0;
     top: 17px;
     position: relative;
@@ -110,7 +117,7 @@
 }
 
 .timeline .corner {
-    border: 3px solid #ED8D8D;
+    border: 3px solid var(--secondary-color);
     width: 100%;
     position: relative;
     border-radius: 15px;
@@ -144,4 +151,29 @@
     #timeline_ctnr {
         max-width: 70%;
     }
+}
+
+/* About Section */
+.about-info-horizontal {
+    padding: 30px 0;
+    text-align: center;
+    max-width: 400px;
+    text-align: left;
+    margin-top: 0;
+}
+
+    .about-info-horizontal .about-icon {
+        font-size: 2.6rem;
+        float: left;
+        margin-top: -10px;
+        margin-right: 20px;
+    }
+
+    .about-info-horizontal .description {
+        overflow: hidden;
+    }
+
+.iphone-container {
+    max-width: 200px;
+    margin: 0 auto;
 }

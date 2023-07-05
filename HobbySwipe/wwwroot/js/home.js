@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     handleCarouselBehaviour();
 
     // Setup the Glider.js for carousel components
-    handleGlider();
+    handleGliders();
 });
 
 // When the window has loaded, listen for scroll events for parallax effect
@@ -100,14 +100,15 @@ function handleCarouselBehaviour() {
 }
 
 // Sets up the Glider.js for carousel elements
-function handleGlider() {
-    const glideElement = document.querySelector('.glide');
+function handleGliders() {
+    const glideFeaturedElement = document.querySelector('.glide-featured');
+    const glideTestimonialsElement = document.querySelector('.glide-testimonials');
 
-    if (glideElement) {
-        const glider = new Glide('.glide-featured', {
-            autoplay: 10000,
+    if (glideFeaturedElement) {
+        const gliderFeatured = new Glide('.glide-featured', {
+            autoplay: 3000,
             type: 'carousel',
-            perView: 4,
+            perView: 6,
             breakpoints: {
                 1200: {
                     perView: 3
@@ -122,6 +123,29 @@ function handleGlider() {
         });
 
         // Mount the glider
-        glider.mount();
+        gliderFeatured.mount();
+    }
+
+    if (glideTestimonialsElement) {
+        const gliderTestimonials = new Glide('.glide-testimonials', {
+            autoplay: 3000,
+            type: 'carousel',
+            perView: 6,
+            direction: 'rtl',
+            breakpoints: {
+                1200: {
+                    perView: 3
+                },
+                992: {
+                    perView: 2
+                },
+                535: {
+                    perView: 1
+                }
+            }
+        });
+
+        // Mount the glider
+        gliderTestimonials.mount();
     }
 }

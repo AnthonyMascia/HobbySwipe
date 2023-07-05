@@ -1,11 +1,11 @@
 :root {
     --font-size: 0.8em;
-    --primary-color: #001e3c;
-    --secondary-color: #B0C4DE;
-    --background-color-1: #F8F8FF;
-    --background-color-2: #001e3c;
-    --accent-color: #BC8F8F;
-    --text-color: #2F4F4F;
+    --primary-color: #b9c2ae;
+    --secondary-color: #48b2e1;
+    --background-color-1: #243743;
+    --background-color-2: #243743;
+    --accent-color: #121b21;
+    --text-color: #dee7ef;
     --green: #2ecc71;
     --purple: #9b59b6;
     --gold: #f1c40f;
@@ -107,11 +107,20 @@ body {
     margin-bottom: 60px;
     font-family: 'IBM Plex Sans', sans-serif;
     background-color: var(--background-color-1);
+    color: var(--text-color);
 }
 
-h2 {
+h1, h2, h3, h4, h5 {
     font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--primary-color);
+}
+
+h1 {
     font-size: clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem);
+}
+
+section.darker {
+    background-image: linear-gradient(rgb(0 0 0/15%) 0 0);
 }
 
 .container.center {
@@ -147,29 +156,51 @@ h2 {
 
 /* Look and feel */
 .btn-primary {
-    color: #fff;
+    color: var(--background-color-1);
     background-color: var(--primary-color);
     border-color: var(--primary-color);
     box-shadow: none;
 }
 
     .btn-primary:hover {
-        color: #fff;
+        color: var(--background-color-1);
+        background-color: var(--secondary-color);
+        background-color: var(--secondary-color);
+        box-shadow: none;
+    }
+
+    .btn-primary:active {
+        color: var(--background-color-1);
         background-color: var(--secondary-color);
         background-color: var(--secondary-color);
     }
 
 .btn-secondary {
-    color: #fff;
+    color: var(--background-color-1);
     background-color: var(--secondary-color);
     border-color: var(--secondary-color);
     box-shadow: none;
 }
 
     .btn-secondary:hover {
-        color: #fff;
+        color: var(--background-color-1);
         background-color: var(--primary-color);
         border-color: var(--primary-color);
+        box-shadow: none;
+    }
+
+.btn-accent {
+    color: var(--background-color-1);
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: none;
+}
+
+    .btn-accent:hover {
+        color: var(--background-color-1);
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        box-shadow: none;
     }
 
 .text-primary {
