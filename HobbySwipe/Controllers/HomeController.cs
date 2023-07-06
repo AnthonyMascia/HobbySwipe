@@ -34,7 +34,8 @@ namespace HobbySwipe.Controllers
             //        ChatMessage.FromSystem("You are a helpful assistant."),
             //        ChatMessage.FromUser("Who won the world series in 2020?"),
             //        ChatMessage.FromAssistant("The Los Angeles Dodgers won the World Series in 2020."),
-            //        ChatMessage.FromUser("Where was it played?")
+            //        ChatMessage.FromUser("Where was it p
+            //        layed?")
             //    },
             //    Model = OpenAI.ObjectModels.Models.ChatGpt3_5Turbo,
             //    MaxTokens = 50//optional
@@ -44,12 +45,6 @@ namespace HobbySwipe.Controllers
             //    Console.WriteLine(completionResult.Choices.First().Message.Content);
             //}
 
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Discover()
-        {
             return View();
         }
 

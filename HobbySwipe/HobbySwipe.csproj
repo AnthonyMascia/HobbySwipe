@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\Home\" />
+    <Folder Include="wwwroot\img\nav\" />
   </ItemGroup>
 
 </Project>
