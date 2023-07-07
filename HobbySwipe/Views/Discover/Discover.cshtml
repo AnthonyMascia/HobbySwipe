@@ -2,27 +2,38 @@
 
 <section class="vh-100 d-flex align-items-center">
     <div class="container text-center py-7 mx-10">
-        <h2>@Model.Question.QuestionText</h2>
-        <form asp-action="Answer" asp-controller="Discover" method="post">
-            <input type="hidden" asp-for="Answer.QuestionID" />
-            @if (Model.Question.AnswerType == AnswerType.MultipleChoice)
-            {
-                foreach (var option in Model.Question.Options)
-                {
-                    <input type="radio" id="@option" name="Answer.Response" value="@option">
-                    <label for="@option">@option</label>
-
-                    <br>
-                }
+        <div id="qstn_ctnr">
+            @{
+                await Html.RenderPartialAsync("_Question.Partial", Model);
             }
-            else if (Model.Question.AnswerType == AnswerType.OpenEnded)
-            {
-                <input type="text" asp-for="Answer.Response">
-            }
-
-            <input type="submit" value="Next" />
-        </form>
+        </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        $(document).on('submit', '#questionForm', function (e) {
+            e.preventDefault();
+
+            var answer = { "QuestionID": $('#Question_ID').val(), "Response": $('#Answer_Response').val() };
+
+            $.ajax({
+                url: '@Url.Action("Answer", "Discover")',
+                method: 'POST',
+                data: answer,
+                success: function (data) {
+                    if (data.success === false) {
+                        alert('You have completed the questionnaire!');
+                    } else {
+                        $('#qstn_ctnr').html(data);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+    </script>
+}
 
 

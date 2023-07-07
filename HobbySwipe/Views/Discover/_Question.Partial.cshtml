@@ -1,0 +1,20 @@
+﻿@model HobbySwipe.ViewModels.Discover.QuestionAnswerViewModel
+
+<form id="questionForm" method="post">
+    <input asp-for="Question.ID" hidden />
+
+    <h4>@Model.Question.QuestionText</h4>
+
+    @if (Model.Question.AnswerType == AnswerType.OpenEnded)
+    {
+        <input asp-for="Answer.Response" class="form-control" />
+    }
+    else
+    {
+        <select asp-for="Answer.Response" asp-items="Model.Question.GetOptionsSelectList" class="colorful-select dropdown-primary">
+            <option value="" disabled selected>Select</option>
+        </select>
+    }
+
+    <button class="btn btn-primary mt-2" type="submit">Next</button>
+</form>

@@ -70,20 +70,20 @@ namespace HobbySwipe.Controllers
         }
 
         [HttpPost]
-        public IActionResult Answer(QuestionAnswerViewModel model)
+        public IActionResult Answer(Answer model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            _questionManager.MoveToNextQuestion(model.Answer);
+            _questionManager.MoveToNextQuestion(model);
 
             var nextQuestion = _questionManager.GetNextQuestion();
 
             if (nextQuestion != null)
             {
-                return View("Discover", new QuestionAnswerViewModel
+                return PartialView("_Question.Partial", new QuestionAnswerViewModel
                 {
                     Question = nextQuestion,
                     Answer = new Answer { QuestionID = nextQuestion.ID }
