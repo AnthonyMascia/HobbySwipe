@@ -2,39 +2,46 @@
 using MathNet.Numerics.RootFinding;
 using System.Collections.Generic;
 using System;
+using HobbySwipe.Data.Entities;
 
 namespace HobbySwipe.Models
 {
     public class QuestionManager
     {
-        private readonly Dictionary<Guid, Question> _questions;
-        private readonly Guid _firstQuestionId;
-        private Guid? _currentQuestionId;
+        private readonly Dictionary<string, Question> _questions;
+        private readonly string _firstQuestionId;
+        private string _currentQuestionId;
 
         public QuestionManager(List<Question> questions)
         {
-            _questions = questions.ToDictionary(q => q.ID);
-            _firstQuestionId = questions.First().ID;
+            _questions = questions.ToDictionary(q => q.Id);
+            _firstQuestionId = questions.First().Id;
             _currentQuestionId = _firstQuestionId;
         }
 
         public Question CurrentQuestion()
         {
-            return _questions[_currentQuestionId.Value];
+            return _questions[_currentQuestionId];
         }
 
         public void MoveToNextQuestion(Answer answer)
         {
-            var currentQuestion = _questions[_currentQuestionId.Value];
+            _currentQuestionId = answer.QuestionId;
+            var currentQuestion = _questions[_currentQuestionId];
 
-            Guid? nextQuestionId = null;
-            if (currentQuestion.AnswerType == AnswerType.MultipleChoice && currentQuestion.ChoiceDependentChildQuestionId.ContainsKey(answer.Response))
+            string nextQuestionId = null;
+            if (currentQuestion.AnswerType == 2 && currentQuestion.QuestionsOptions != null)
             {
-                nextQuestionId = currentQuestion.ChoiceDependentChildQuestionId[answer.Response];
-            }
-            else if (currentQuestion.AnswerType == AnswerType.OpenEnded && currentQuestion.OpenEndedChildQuestionId.HasValue)
-            {
-                nextQuestionId = currentQuestion.OpenEndedChildQuestionId.Value;
+                var option = currentQuestion.QuestionsOptions.FirstOrDefault(x => x.OptionText.ToLower() == answer.Response.ToLower());
+
+                if (option != null && option.NextQuestionId != null)
+                {
+                    nextQuestionId = option.NextQuestionId;
+                }
+                else
+                {
+                    nextQuestionId = currentQuestion.NextQuestionId;
+                }
             }
             else
             {
@@ -52,7 +59,7 @@ namespace HobbySwipe.Models
 
         public Question GetNextQuestion()
         {
-            return _currentQuestionId.HasValue ? _questions[_currentQuestionId.Value] : null;
+            return _currentQuestionId != null ? _questions[_currentQuestionId] : null;
         }
     }
 

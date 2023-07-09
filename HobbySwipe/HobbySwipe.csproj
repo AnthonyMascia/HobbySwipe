@@ -15,4 +15,8 @@
     <Folder Include="wwwroot\img\nav\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HobbySwipe.Data\HobbySwipe.Data.csproj" />
+  </ItemGroup>
+
 </Project>

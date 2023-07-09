@@ -1,4 +1,5 @@
-﻿using HobbySwipe.Models;
+﻿using HobbySwipe.Data.Entities;
+using HobbySwipe.Models;
 
 namespace HobbySwipe.ViewModels.Discover
 {

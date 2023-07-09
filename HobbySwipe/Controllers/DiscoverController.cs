@@ -1,4 +1,6 @@
-﻿using HobbySwipe.Models;
+﻿using HobbySwipe.Data.Entities;
+using HobbySwipe.Data.Repositories;
+using HobbySwipe.Models;
 using HobbySwipe.ViewModels.Discover;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,53 +10,62 @@ namespace HobbySwipe.Controllers
     public class DiscoverController : Controller
     {
         private static QuestionManager _questionManager;
+        private IQuestionsRepository _repos;
 
-        public DiscoverController()
+        //public DiscoverController()
+        //{
+        //    if (_questionManager == null)
+        //    {
+        //        // Construct your questions
+        //        var question1 = new Question
+        //        {
+        //            ID = Guid.NewGuid(),
+        //            QuestionText = "What is your age?",
+        //            AnswerType = AnswerType.OpenEnded,
+        //            NextQuestionId = Guid.NewGuid() // This will be the ID of question2
+        //        };
+
+        //        var question2 = new Question
+        //        {
+        //            ID = question1.NextQuestionId.Value,
+        //            QuestionText = "Do you prefer social or solitary activities?",
+        //            AnswerType = AnswerType.MultipleChoice,
+        //            Options = new List<string> { "Social", "Solitary" },
+        //            ChoiceDependentChildQuestionId = new Dictionary<string, Guid?>
+        //            {
+        //                { "Solitary", Guid.NewGuid() } // This will be the ID of question2a
+        //            },
+        //            NextQuestionId = Guid.NewGuid() // This will be the ID of question3
+        //        };
+
+
+        //        var question3 = new Question
+        //        {
+        //            ID = question2.NextQuestionId.Value,
+        //            QuestionText = "Where do you live?",
+        //            AnswerType = AnswerType.OpenEnded
+        //            // No NextQuestionId since this is the last question in the example
+        //        };
+
+        //        var question2a = new Question
+        //        {
+        //            ID = question2.ChoiceDependentChildQuestionId["Solitary"].Value,
+        //            QuestionText = "What solitary activities do you enjoy?",
+        //            AnswerType = AnswerType.OpenEnded,
+        //            NextQuestionId = question3.ID // After question2a, we proceed to question3
+        //        };
+
+        //        // Construct your question list
+        //        _questionManager = new QuestionManager(new List<Question> { question1, question2, question2a, question3 });
+        //    }
+        //}
+
+        public DiscoverController(IQuestionsRepository repos)
         {
-            if (_questionManager == null)
-            {
-                // Construct your questions
-                var question1 = new Question
-                {
-                    ID = Guid.NewGuid(),
-                    QuestionText = "What is your age?",
-                    AnswerType = AnswerType.OpenEnded,
-                    NextQuestionId = Guid.NewGuid() // This will be the ID of question2
-                };
+            _repos = repos;
 
-                var question2 = new Question
-                {
-                    ID = question1.NextQuestionId.Value,
-                    QuestionText = "Do you prefer social or solitary activities?",
-                    AnswerType = AnswerType.MultipleChoice,
-                    Options = new List<string> { "Social", "Solitary" },
-                    ChoiceDependentChildQuestionId = new Dictionary<string, Guid?>
-                    {
-                        { "Solitary", Guid.NewGuid() } // This will be the ID of question2a
-                    },
-                    NextQuestionId = Guid.NewGuid() // This will be the ID of question3
-                };
-
-
-                var question3 = new Question
-                {
-                    ID = question2.NextQuestionId.Value,
-                    QuestionText = "Where do you live?",
-                    AnswerType = AnswerType.OpenEnded
-                    // No NextQuestionId since this is the last question in the example
-                };
-
-                var question2a = new Question
-                {
-                    ID = question2.ChoiceDependentChildQuestionId["Solitary"].Value,
-                    QuestionText = "What solitary activities do you enjoy?",
-                    AnswerType = AnswerType.OpenEnded,
-                    NextQuestionId = question3.ID // After question2a, we proceed to question3
-                };
-
-                // Construct your question list
-                _questionManager = new QuestionManager(new List<Question> { question1, question2, question2a, question3 });
-            }
+            var questions = _repos.GetQuestions().ToList();
+            _questionManager = new QuestionManager(questions);
         }
 
         [HttpGet]
@@ -65,17 +76,18 @@ namespace HobbySwipe.Controllers
             return View(new QuestionAnswerViewModel
             {
                 Question = firstQuestion,
-                Answer = new Answer { QuestionID = firstQuestion.ID }
+                Answer = new Answer { QuestionId = firstQuestion.Id }
             });
         }
 
         [HttpPost]
         public IActionResult Answer(Answer model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            // todo: fix the modelstate validation
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(model);
+            //}
 
             _questionManager.MoveToNextQuestion(model);
 
@@ -86,7 +98,7 @@ namespace HobbySwipe.Controllers
                 return PartialView("_Question.Partial", new QuestionAnswerViewModel
                 {
                     Question = nextQuestion,
-                    Answer = new Answer { QuestionID = nextQuestion.ID }
+                    Answer = new Answer { QuestionId = nextQuestion.Id }
                 });
             }
             else

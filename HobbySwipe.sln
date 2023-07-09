@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HobbySwipe", "HobbySwipe\HobbySwipe.csproj", "{5F6D75B4-D398-46E3-B565-9C7A7F2BB5FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HobbySwipe", "HobbySwipe\HobbySwipe.csproj", "{5F6D75B4-D398-46E3-B565-9C7A7F2BB5FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HobbySwipe.Data", "HobbySwipe.Data\HobbySwipe.Data.csproj", "{8C4770AF-E0AE-4D9A-9743-F5B4F958C454}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5F6D75B4-D398-46E3-B565-9C7A7F2BB5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F6D75B4-D398-46E3-B565-9C7A7F2BB5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F6D75B4-D398-46E3-B565-9C7A7F2BB5FA}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{5F6D75B4-D398-46E3-B565-9C7A7F2BB5FA}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{5F6D75B4-D398-46E3-B565-9C7A7F2BB5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F6D75B4-D398-46E3-B565-9C7A7F2BB5FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C4770AF-E0AE-4D9A-9743-F5B4F958C454}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{8C4770AF-E0AE-4D9A-9743-F5B4F958C454}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{8C4770AF-E0AE-4D9A-9743-F5B4F958C454}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C4770AF-E0AE-4D9A-9743-F5B4F958C454}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,7 +15,7 @@
         $(document).on('submit', '#questionForm', function (e) {
             e.preventDefault();
 
-            var answer = { "QuestionID": $('#Question_ID').val(), "Response": $('#Answer_Response').val() };
+            var answer = { "QuestionId": $('#Question_Id').val(), "Response": $('#Answer_Response').val() };
 
             $.ajax({
                 url: '@Url.Action("Answer", "Discover")',
