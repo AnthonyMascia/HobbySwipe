@@ -10,7 +10,7 @@ namespace HobbySwipe.Data.Repositories
 {
     public interface IQuestionsRepository
     {
-        public IEnumerable<Question> GetQuestions();
+        public Task<IEnumerable<Question>> GetQuestionsAsync();
     }
 
     public class QuestionsRepository : IQuestionsRepository
@@ -22,9 +22,9 @@ namespace HobbySwipe.Data.Repositories
             _ctx = ctx;
         }
 
-        public IEnumerable<Question> GetQuestions()
+        public async Task<IEnumerable<Question>> GetQuestionsAsync()
         {
-            return _ctx.Questions.Include(x => x.QuestionsOptions);
+            return await _ctx.Questions.Include(x => x.QuestionsOptions).ToListAsync();
         }
     }
 }

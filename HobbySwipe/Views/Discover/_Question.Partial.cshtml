@@ -18,6 +18,10 @@
             }
         </select>
     }
-
+    @if (!Model.IsFirstQuestion)
+    {
+        <button id="goBackBtn" class="btn btn-secondary mt-2" type="button">Go Back</button>
+        
+    }
     <button class="btn btn-primary mt-2" type="submit">Next</button>
 </form>

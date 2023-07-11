@@ -2,9 +2,7 @@
 
 using HobbySwipe.Data.Entities;
 using HobbySwipe.Data.Repositories;
-using MathNet.Numerics;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -38,7 +36,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
-app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",

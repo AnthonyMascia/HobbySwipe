@@ -33,6 +33,24 @@
                 }
             });
         });
+
+        $(document).on('click', '#goBackBtn', function (e) {
+            e.preventDefault();
+
+            var answer = { "QuestionId": $('#Question_Id').val(), "Response": $('#Answer_Response').val() };
+
+            $.ajax({
+                url: '@Url.Action("GoBack", "Discover")',
+                method: 'POST',
+                data: answer,
+                success: function (data) {
+                    $('#qstn_ctnr').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
     </script>
 }
 

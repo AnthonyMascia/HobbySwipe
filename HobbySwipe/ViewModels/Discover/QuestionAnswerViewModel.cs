@@ -7,5 +7,6 @@ namespace HobbySwipe.ViewModels.Discover
     {
         public Question Question { get; set; }
         public Answer Answer { get; set; }
+        public bool IsFirstQuestion { get; set; }
     }
 }

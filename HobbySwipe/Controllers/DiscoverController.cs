@@ -6,99 +6,78 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HobbySwipe.Controllers
 {
-    [Route("[controller]")]
     public class DiscoverController : Controller
     {
+        // The QuestionManager instance is used to manage the flow of questions
         private static QuestionManager _questionManager;
-        private IQuestionsRepository _repos;
 
-        //public DiscoverController()
-        //{
-        //    if (_questionManager == null)
-        //    {
-        //        // Construct your questions
-        //        var question1 = new Question
-        //        {
-        //            ID = Guid.NewGuid(),
-        //            QuestionText = "What is your age?",
-        //            AnswerType = AnswerType.OpenEnded,
-        //            NextQuestionId = Guid.NewGuid() // This will be the ID of question2
-        //        };
+        // A repository that allows the controller to interact with the database
+        private readonly IQuestionsRepository _repos;
 
-        //        var question2 = new Question
-        //        {
-        //            ID = question1.NextQuestionId.Value,
-        //            QuestionText = "Do you prefer social or solitary activities?",
-        //            AnswerType = AnswerType.MultipleChoice,
-        //            Options = new List<string> { "Social", "Solitary" },
-        //            ChoiceDependentChildQuestionId = new Dictionary<string, Guid?>
-        //            {
-        //                { "Solitary", Guid.NewGuid() } // This will be the ID of question2a
-        //            },
-        //            NextQuestionId = Guid.NewGuid() // This will be the ID of question3
-        //        };
-
-
-        //        var question3 = new Question
-        //        {
-        //            ID = question2.NextQuestionId.Value,
-        //            QuestionText = "Where do you live?",
-        //            AnswerType = AnswerType.OpenEnded
-        //            // No NextQuestionId since this is the last question in the example
-        //        };
-
-        //        var question2a = new Question
-        //        {
-        //            ID = question2.ChoiceDependentChildQuestionId["Solitary"].Value,
-        //            QuestionText = "What solitary activities do you enjoy?",
-        //            AnswerType = AnswerType.OpenEnded,
-        //            NextQuestionId = question3.ID // After question2a, we proceed to question3
-        //        };
-
-        //        // Construct your question list
-        //        _questionManager = new QuestionManager(new List<Question> { question1, question2, question2a, question3 });
-        //    }
-        //}
-
+        // Constructor for the controller, initializes the repository
         public DiscoverController(IQuestionsRepository repos)
         {
             _repos = repos;
+        }
 
-            var questions = _repos.GetQuestions().ToList();
+        // An asynchronous method to initialize the QuestionManager with data from the repository
+        private async Task InitializeQuestionManager()
+        {
+            var questions = (await _repos.GetQuestionsAsync()).ToList();
             _questionManager = new QuestionManager(questions);
         }
 
-        [HttpGet]
-        public IActionResult Discover()
+        // The initial HTTP GET action, displays the first question
+        [HttpGet("Discover")]
+        public async Task<IActionResult> Discover()
         {
+            if (_questionManager == null)
+            {
+                // Initialize QuestionManager if it's not already done
+                await InitializeQuestionManager();
+            }
+
             var firstQuestion = _questionManager.GetFirstQuestion();
 
             return View(new QuestionAnswerViewModel
             {
                 Question = firstQuestion,
-                Answer = new Answer { QuestionId = firstQuestion.Id }
+                Answer = new Answer
+                {
+                    QuestionId = firstQuestion.Id,
+                    UserId = Guid.NewGuid() // todo: grab user's real ID
+                },
+                IsFirstQuestion = true
             });
         }
 
+        // The HTTP POST action for answering a question
         [HttpPost]
         public IActionResult Answer(Answer model)
         {
-            // todo: fix the modelstate validation
             //if (!ModelState.IsValid)
             //{
+            //    // If the model is not valid, return the current view with the model to display errors
             //    return View(model);
             //}
 
+            // Move to the next question based on the answer
             _questionManager.MoveToNextQuestion(model);
 
             var nextQuestion = _questionManager.GetNextQuestion();
 
+            // If there is a next question, return a partial view with the new question
+            // If not, return a "Complete" view
             if (nextQuestion != null)
             {
                 return PartialView("_Question.Partial", new QuestionAnswerViewModel
                 {
                     Question = nextQuestion,
-                    Answer = new Answer { QuestionId = nextQuestion.Id }
+                    Answer = new Answer 
+                    { 
+                        QuestionId = nextQuestion.Id,
+                        UserId = Guid.NewGuid() // todo: grab user's real ID
+                    }
                 });
             }
             else
@@ -106,5 +85,32 @@ namespace HobbySwipe.Controllers
                 return View("Complete");
             }
         }
+
+        // The HTTP POST action for going back to the previous question
+        [HttpPost]
+        public IActionResult GoBack(Answer model)
+        {
+            _questionManager.MoveToPreviousQuestion(model);
+
+            var previousQuestion = _questionManager.CurrentQuestion();
+            var previousAnswer = _questionManager.CurrentAnswer();
+
+            // If there is a previous question, return a partial view with the previous question
+            // If not, redirect to the initial action
+            if (previousQuestion != null && previousQuestion.Id != _questionManager.FirstQuestion().Id)
+            {
+                return PartialView("_Question.Partial", new QuestionAnswerViewModel
+                {
+                    Question = previousQuestion,
+                    Answer = previousAnswer
+                });
+            }
+            else
+            {
+                return RedirectToAction(nameof(Discover));
+            }
+        }
     }
+
+
 }
