@@ -1,0 +1,130 @@
+﻿#section_discover {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container
+{
+    height: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#qstn_ctnr {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper {
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .swiper-button-next, .swiper-button-prev {
+        display: none;
+    }
+}
+
+
+.btn-arrow {
+    height: 120px;
+    left: -10%;
+    top: 50%;
+    transform: translateX(0%) translateY(0%);
+    transition: transform 0.1s;
+    width: 40px;
+    background: transparent;
+    border: none;
+}
+
+.btn-arrow-top-right, .btn-arrow-bottom-right, .btn-arrow-top-left, .btn-arrow-bottom-left {
+    background-color: #666;
+    height: 4px;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+}
+
+    .btn-arrow-top-right:after, .btn-arrow-bottom-right:after, .btn-arrow-top-left:after, .btn-arrow-bottom-left:after {
+        background-color: #fff;
+        content: '';
+        height: 100%;
+        position: absolute;
+        top: 0;
+        transition: all 0.15s;
+    }
+
+.btn-arrow-top-right {
+    transform: rotate(45deg);
+    transform-origin: bottom right;
+}
+
+    .btn-arrow-top-right:after {
+        left: 100%;
+        right: 0;
+        transition-delay: 0s;
+    }
+
+.btn-arrow-bottom-right {
+    transform: rotate(-45deg);
+    transform-origin: top right;
+}
+
+    .btn-arrow-bottom-right:after {
+        left: 0;
+        right: 100%;
+        transition-delay: 0.15s;
+    }
+
+.btn-arrow-top-left {
+    transform: rotate(45deg);
+    transform-origin: top left;
+}
+
+    .btn-arrow-top-left:after {
+        left: 100%;
+        right: 0;
+        transition-delay: 0.15s;
+    }
+
+.btn-arrow-bottom-left {
+    transform: rotate(-45deg);
+    transform-origin: bottom left;
+}
+
+    .btn-arrow-bottom-left:after {
+        left: 0;
+        right: 100%;
+        transition-delay: 0s;
+    }
+
+.btn-arrow:hover .btn-arrow-top-right:after {
+    left: 0;
+    transition-delay: 0.15s;
+}
+
+.btn-arrow:hover .btn-arrow-bottom-right:after {
+    right: 0;
+    transition-delay: 0s;
+}
+
+.btn-arrow:hover .btn-arrow-top-left:after {
+    left: 0;
+    transition-delay: 0s;
+}
+
+.btn-arrow:hover .btn-arrow-bottom-left:after {
+    right: 0;
+    transition-delay: 0.15s;
+}
+
+.btn-arrow:active {
+    transform: translateX(0%) translateY(0%) scale(0.9);
+}

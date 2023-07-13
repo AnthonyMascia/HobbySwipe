@@ -1,27 +1,28 @@
 ﻿@model HobbySwipe.ViewModels.Discover.QuestionAnswerViewModel
 
-<form id="questionForm" method="post">
+<form id="questionForm" method="post" autocomplete="off">
     <input asp-for="Question.Id" hidden />
-
-    <h4>@Model.Question.QuestionText</h4>
-
-    @if (Model.Question.AnswerType == 1)
-    {
-        <input asp-for="Answer.Response" class="form-control" />
-    }
-    else
-    {
-        <select asp-for="Answer.Response" class="colorful-select dropdown-primary">
-            @foreach (var option in Model.Question.QuestionsOptions)
+    <div class="row text-center">
+        <h4>@Model.Question.QuestionText</h4>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-6">
+            @if (Model.Question.AnswerType == 1)
             {
-                <option value="@option.OptionText">@option.OptionText</option>
+                <div class="input-group input-group-static">
+                    <input asp-for="Answer.Response" class="form-control" type="text">
+                </div>
             }
-        </select>
-    }
-    @if (!Model.IsFirstQuestion)
-    {
-        <button id="goBackBtn" class="btn btn-secondary mt-2" type="button">Go Back</button>
-        
-    }
-    <button class="btn btn-primary mt-2" type="submit">Next</button>
+            else
+            {
+                <select asp-for="Answer.Response" class="colorful-select dropdown-primary">
+                    @foreach (var option in Model.Question.QuestionsOptions)
+                    {
+                        <option value="@option.OptionText">@option.OptionText</option>
+                    }
+                    }
+                </select>
+            }
+        </div>
+    </div>
 </form>

@@ -1,17 +1,103 @@
 ﻿@model HobbySwipe.ViewModels.Discover.QuestionAnswerViewModel
 
-<section class="vh-100 d-flex align-items-center">
-    <div class="container text-center py-7 mx-10">
-        <div id="qstn_ctnr">
-            @{
-                await Html.RenderPartialAsync("_Question.Partial", Model);
-            }
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/discover.css">
+}
+
+<section id="section_discover">
+    <div class="container">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div id="qstn_ctnr">
+                        @{
+                            await Html.RenderPartialAsync("_Question.Partial", Model);
+                        }
+                    </div>
+                </div>
+                <div class="swiper-slide"></div>
+            </div>
+
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
         </div>
     </div>
 </section>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
     <script>
+        $(document).ready(function () {
+            const swiper = new Swiper('.swiper', {
+                // Optional parameters
+                loop: true,
+                watchOverflow: false,
+                preventInteractionOnTransition: true,
+                longSwipes: false,
+                spaceBetween: 10000,
+
+                // Navigation arrows
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+
+                on: {
+                    realIndexChange: (swiper) => {
+                        swiper.allowTouchMove = false;
+                        swiper.unsetGrabCursor();
+                    },
+                    touchEnd : (swiper) => {
+                        swiper.allowTouchMove = true;
+                    },
+                    slideNextTransitionEnd: (swiper) => {
+                        $('#qstn_ctnr').addClass('d-none');
+                        var answer = { "QuestionId": $('#Question_Id').val(), "Response": $('#Answer_Response').val() };
+
+                        $.ajax({
+                            url: '@Url.Action("Answer", "Discover")',
+                            method: 'POST',
+                            data: answer,
+                            success: function (data) {
+                                if (data.success === false) {
+                                    alert('You have completed the questionnaire!');
+                                } else {
+                                    $('#qstn_ctnr').html(data);
+                                    $('#qstn_ctnr').removeClass('d-none');
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus, errorThrown);
+                            }
+                        });
+                        swiper.slideNext(0, false);
+                    },
+                    slidePrevTransitionEnd: (swiper) => {
+                        $('#qstn_ctnr').addClass('d-none');
+
+                        var answer = { "QuestionId": $('#Question_Id').val(), "Response": $('#Answer_Response').val() };
+
+                        $.ajax({
+                            url: '@Url.Action("GoBack", "Discover")',
+                            method: 'POST',
+                            data: answer,
+                            success: function (data) {
+                                $('#qstn_ctnr').html(data);
+                                $('#qstn_ctnr').removeClass('d-none');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus, errorThrown);
+                            }
+                        });
+                        swiper.slideNext(0, false);
+                    },
+                },
+            });
+        });
+
         $(document).on('submit', '#questionForm', function (e) {
             e.preventDefault();
 
@@ -50,6 +136,21 @@
                     console.log(textStatus, errorThrown);
                 }
             });
+        });
+
+        $(document).keydown(function (e) {
+            switch (e.which) {
+                case 37: // left arrow key
+                    if (!$("#goBackBtn").is(':hidden')) {
+                        $("#goBackBtn").click();
+                    }
+                    break;
+                case 39: // right arrow key
+                    $("button[type='submit']").click();
+                    break;
+                default: return; // exit this handler for other keys
+            }
+            e.preventDefault(); // prevent the default action (scroll / move caret)
         });
     </script>
 }

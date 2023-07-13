@@ -23,7 +23,7 @@ namespace HobbySwipe.Models
             _firstQuestionId = questions.First().Id;
             _currentQuestionId = _firstQuestionId;
             _questionHistory = new Stack<string>();
-            _answers = new Dictionary<string, Answer>(); // Initialize _answers dictionary
+            _answers = new Dictionary<string, Answer>();
         }
 
         public Question CurrentQuestion()
@@ -33,12 +33,7 @@ namespace HobbySwipe.Models
 
         public Answer CurrentAnswer()
         {
-            return _answers.TryGetValue(_currentQuestionId, out var currentAnswer)
-                ? currentAnswer
-                : new Answer
-                {
-                    QuestionId = _currentQuestionId
-                };
+            return _answers.TryGetValue(_currentQuestionId, out var currentAnswer) ? currentAnswer : new Answer { QuestionId = _currentQuestionId };
         }
 
         public Question FirstQuestion()
@@ -73,8 +68,10 @@ namespace HobbySwipe.Models
 
         public void MoveToPreviousQuestion(Answer answer)
         {
-            // Save the user's answer
-            _answers[answer.QuestionId] = answer;
+            // Delete the answer for the current question the user is moving back from.
+            // This makes it so that we don't save any answers from potential question
+            // chains that were broken from the user navigating back
+            _answers.Remove(answer.QuestionId);
 
             if (_questionHistory.Count > 0)
             {

@@ -97,18 +97,11 @@ namespace HobbySwipe.Controllers
 
             // If there is a previous question, return a partial view with the previous question
             // If not, redirect to the initial action
-            if (previousQuestion != null && previousQuestion.Id != _questionManager.FirstQuestion().Id)
+            return PartialView("_Question.Partial", new QuestionAnswerViewModel
             {
-                return PartialView("_Question.Partial", new QuestionAnswerViewModel
-                {
-                    Question = previousQuestion,
-                    Answer = previousAnswer
-                });
-            }
-            else
-            {
-                return RedirectToAction(nameof(Discover));
-            }
+                Question = previousQuestion,
+                Answer = previousAnswer
+            });
         }
     }
 
