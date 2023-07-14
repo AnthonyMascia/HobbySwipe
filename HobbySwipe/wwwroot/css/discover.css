@@ -25,6 +25,26 @@
     height: 100%;
 }
 
+.swiper-button-next, .swiper-button-prev {
+    transition: transform 0.2s ease;
+}
+
+    .swiper-button-next:active, .swiper-button-prev:active {
+        transform: scale(0.9);
+    }
+
+.swiper-button-next:after, .swiper-button-prev:after {
+    transition: color 0.3s ease-in-out;
+}
+
+.swiper-button-next:hover:after, .swiper-button-prev:hover:after {
+    color: white;
+}
+
+:focus-visible {
+    outline: none;
+}
+
 @media (max-width: 768px) {
     .swiper-button-next, .swiper-button-prev {
         display: none;
