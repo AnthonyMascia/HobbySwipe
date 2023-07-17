@@ -110,7 +110,7 @@ namespace HobbySwipe.Controllers
 
             var openAiService = new OpenAIService(new OpenAiOptions()
             {
-                ApiKey = "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"
+                ApiKey = ""
             });
 
             var messages = new List<ChatMessage>
