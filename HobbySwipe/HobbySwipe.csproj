@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Betalgo.OpenAI.Utilities" Version="7.0.1" />
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>

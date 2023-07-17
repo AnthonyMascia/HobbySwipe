@@ -26,19 +26,34 @@ namespace HobbySwipe.Models
             _answers = new Dictionary<string, Answer>();
         }
 
-        public Question CurrentQuestion()
+        public Question GetCurrentQuestion()
         {
             return _questions.TryGetValue(_currentQuestionId, out var currentQuestion) ? currentQuestion : null;
         }
+        public Question GetFirstQuestion()
+        {
+            _currentQuestionId = _firstQuestionId;
+            return _questions[_firstQuestionId];
+        }
 
-        public Answer CurrentAnswer()
+        public Question GetNextQuestion()
+        {
+            return _currentQuestionId != null && _questions.ContainsKey(_currentQuestionId) ? _questions[_currentQuestionId] : null;
+        }
+
+        public Answer GetCurrentAnswer()
         {
             return _answers.TryGetValue(_currentQuestionId, out var currentAnswer) ? currentAnswer : new Answer { QuestionId = _currentQuestionId };
         }
 
-        public Question FirstQuestion()
+        public Dictionary<string, Answer> GetAnswers()
         {
-            return _questions.TryGetValue(_firstQuestionId, out var firstQuestion) ? firstQuestion : null;
+            return _answers;
+        }
+
+        public Question GetQuestion(string questionId)
+        {
+            return _questions[questionId];
         }
 
         public void MoveToNextQuestion(Answer answer)
@@ -79,16 +94,6 @@ namespace HobbySwipe.Models
             }
         }
 
-        public Question GetFirstQuestion()
-        {
-            _currentQuestionId = _firstQuestionId;
-            return _questions[_firstQuestionId];
-        }
-
-        public Question GetNextQuestion()
-        {
-            return _currentQuestionId != null && _questions.ContainsKey(_currentQuestionId) ? _questions[_currentQuestionId] : null;
-        }
     }
 
 }
