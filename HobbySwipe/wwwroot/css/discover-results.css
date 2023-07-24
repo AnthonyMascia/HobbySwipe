@@ -1,4 +1,12 @@
-﻿.results {
+﻿body {
+	margin: 0;
+}
+
+.pb-3 {
+	padding-bottom: 0 !important;
+}
+
+.results {
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;
@@ -50,11 +58,10 @@
 
 .results--cards {
 	flex-grow: 1;
-	padding-top: 40px;
 	text-align: center;
 	display: flex;
 	justify-content: center;
-	align-items: flex-end;
+	align-items: center;
 	z-index: 1;
 }
 
@@ -136,4 +143,12 @@
 
 .fa-user {
 	color: green;
+}
+
+footer, .navbar {
+	display: none;
+}
+
+.ignore-pointer {
+	pointer-events: none;
 }
