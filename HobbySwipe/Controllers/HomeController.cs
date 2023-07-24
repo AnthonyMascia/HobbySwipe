@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HobbySwipe.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using HobbySwipe.Models;
-using OpenAI.Interfaces;
-using OpenAI.ObjectModels;
-using OpenAI.ObjectModels.RequestModels;
-using OpenAI.Managers;
-using OpenAI;
-using OpenAI.ObjectModels.RequestModels;
 
 namespace HobbySwipe.Controllers
 {

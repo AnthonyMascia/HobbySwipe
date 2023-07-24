@@ -1,8 +1,4 @@
-﻿using Apache.Arrow;
-using MathNet.Numerics.RootFinding;
-using System.Collections.Generic;
-using System;
-using HobbySwipe.Data.Entities;
+﻿using HobbySwipe.Data.Models;
 
 namespace HobbySwipe.Models
 {
@@ -11,52 +7,52 @@ namespace HobbySwipe.Models
     /// </summary>
     public class QuestionManager
     {
-        private readonly Dictionary<string, Question> _questions;
+        private readonly Dictionary<string, QuestionModel> _questions;
         private readonly string _firstQuestionId;
         private string _currentQuestionId;
         private readonly Stack<string> _questionHistory;
-        private readonly Dictionary<string, Answer> _answers; // To store user's answers
+        private readonly Dictionary<string, AnswerModel> _answers;
 
-        public QuestionManager(List<Question> questions)
+        public QuestionManager(List<QuestionModel> questions)
         {
             _questions = questions.ToDictionary(q => q.Id);
             _firstQuestionId = questions.First().Id;
             _currentQuestionId = _firstQuestionId;
             _questionHistory = new Stack<string>();
-            _answers = new Dictionary<string, Answer>();
+            _answers = new Dictionary<string, AnswerModel>();
         }
 
-        public Question GetCurrentQuestion()
+        public QuestionModel GetCurrentQuestion()
         {
             return _questions.TryGetValue(_currentQuestionId, out var currentQuestion) ? currentQuestion : null;
         }
-        public Question GetFirstQuestion()
+        public QuestionModel GetFirstQuestion()
         {
             _currentQuestionId = _firstQuestionId;
             return _questions[_firstQuestionId];
         }
 
-        public Question GetNextQuestion()
+        public QuestionModel GetNextQuestion()
         {
             return _currentQuestionId != null && _questions.ContainsKey(_currentQuestionId) ? _questions[_currentQuestionId] : null;
         }
 
-        public Answer GetCurrentAnswer()
+        public AnswerModel GetCurrentAnswer()
         {
-            return _answers.TryGetValue(_currentQuestionId, out var currentAnswer) ? currentAnswer : new Answer { QuestionId = _currentQuestionId };
+            return _answers.TryGetValue(_currentQuestionId, out var currentAnswer) ? currentAnswer : new AnswerModel { QuestionId = _currentQuestionId };
         }
 
-        public Dictionary<string, Answer> GetAnswers()
+        public Dictionary<string, AnswerModel> GetAnswers()
         {
             return _answers;
         }
 
-        public Question GetQuestion(string questionId)
+        public QuestionModel GetQuestion(string questionId)
         {
             return _questions[questionId];
         }
 
-        public void MoveToNextQuestion(Answer answer)
+        public void MoveToNextQuestion(AnswerModel answer)
         {
             if (!_questions.ContainsKey(answer.QuestionId)) return;
 
@@ -81,7 +77,7 @@ namespace HobbySwipe.Models
             _currentQuestionId = nextQuestionId;
         }
 
-        public void MoveToPreviousQuestion(Answer answer)
+        public void MoveToPreviousQuestion(AnswerModel answer)
         {
             // Delete the answer for the current question the user is moving back from.
             // This makes it so that we don't save any answers from potential question

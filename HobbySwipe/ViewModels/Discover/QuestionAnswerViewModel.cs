@@ -1,12 +1,11 @@
-﻿using HobbySwipe.Data.Entities;
-using HobbySwipe.Models;
+﻿using HobbySwipe.Data.Models;
 
 namespace HobbySwipe.ViewModels.Discover
 {
     public class QuestionAnswerViewModel
     {
-        public Question Question { get; set; }
-        public Answer Answer { get; set; }
+        public QuestionModel Question { get; set; }
+        public AnswerModel Answer { get; set; }
         public bool IsFirstQuestion { get; set; }
     }
 }

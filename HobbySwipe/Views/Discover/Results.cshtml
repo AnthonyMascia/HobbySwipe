@@ -1,10 +1,37 @@
-﻿@model HobbySwipe.ViewModels.Discover.ResultsViewModel
+﻿@model HobbySwipe.Models.ResultsRoot
+ 
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/discover-results.css">
+}
 
-<div class="container">
-    <ul>
-        @foreach (var result in Model.Results)
-        {
-            <li>@result</li>
-        }
-    </ul>
-</div>
+<section id="section_discover_results">
+    <div class="results">
+        <div class="results--status">
+            <i class="fa fa-remove"></i>
+            <i class="fa fa-heart"></i>
+            <i class="fa fa-user"></i>
+        </div>
+
+        <div class="results--cards">
+            @foreach (var result in Model.Results)
+            {
+                <div class="results--card">
+                    <h3>@result.Hobby</h3>
+                    <p>@result.Reasoning</p>
+                </div>
+            }
+        </div>
+
+        <div class="results--buttons">
+            <button id="nope"><i class="fa fa-remove"></i></button>
+            <button id="love"><i class="fa fa-heart"></i></button>
+            <button id="fav"><i class="fa fa-user"></i></button>
+        </div>
+    </div>
+
+</section>
+
+@section Scripts {
+    <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+    <script type="text/javascript" src="~/js/discover-results.js"></script>
+}

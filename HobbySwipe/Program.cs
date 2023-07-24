@@ -1,7 +1,9 @@
 //dotnet ef dbcontext scaffold “Server=tcp:hobbyswipe-test-eastus.database.windows.net,1433;Initial Catalog=HobbySwipe;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Authentication=Active Directory Interactive;” Microsoft.EntityFrameworkCore.SqlServer -o Entities
 
+using AutoMapper;
 using HobbySwipe.Data.Entities;
 using HobbySwipe.Data.Repositories;
+using HobbySwipe.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,11 +16,21 @@ builder.Configuration
     .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables();
 
+
+// Add automapper service.
+var mappingConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new AutoMappingService());
+});
+
+IMapper autoMapper = mappingConfig.CreateMapper();
+
 // Add connection strings.
 builder.Services.AddDbContext<HobbySwipeContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("AzureSQLConnection")), ServiceLifetime.Scoped);
 
 // Add services to the container.
+builder.Services.AddSingleton(autoMapper);
 builder.Services.AddScoped<IQuestionsRepository, QuestionsRepository>();
 builder.Services.AddControllersWithViews();
 

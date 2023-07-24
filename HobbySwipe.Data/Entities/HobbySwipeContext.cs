@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace HobbySwipe.Data.Entities;
 
@@ -17,6 +15,10 @@ public partial class HobbySwipeContext : DbContext
 
     public virtual DbSet<Answer> Answers { get; set; }
 
+    public virtual DbSet<HobbiesSynonym> HobbiesSynonyms { get; set; }
+
+    public virtual DbSet<Hobby> Hobbies { get; set; }
+
     public virtual DbSet<Question> Questions { get; set; }
 
     public virtual DbSet<QuestionsOption> QuestionsOptions { get; set; }
@@ -29,26 +31,52 @@ public partial class HobbySwipeContext : DbContext
     {
         modelBuilder.Entity<Answer>(entity =>
         {
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
             entity.Property(e => e.QuestionId)
+                .IsRequired()
                 .HasMaxLength(15)
                 .HasColumnName("QuestionID");
+            entity.Property(e => e.Response).IsRequired();
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Question).WithMany(p => p.Answers)
                 .HasForeignKey(d => d.QuestionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Answers__Questio__17F790F9");
+                .HasConstraintName("FK__Answers__Questio__3587F3E0");
+        });
+
+        modelBuilder.Entity<HobbiesSynonym>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Hobbies.__3214EC0732D1D5A4");
+
+            entity.ToTable("Hobbies.Synonyms");
+
+            entity.Property(e => e.Synonym)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.HasOne(d => d.Hobby).WithMany(p => p.HobbiesSynonyms)
+                .HasForeignKey(d => d.HobbyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Hobbies.S__Hobby__3B40CD36");
+        });
+
+        modelBuilder.Entity<Hobby>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Hobbies__3214EC071C2013D9");
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.Slug)
+                .IsRequired()
+                .HasMaxLength(255);
         });
 
         modelBuilder.Entity<Question>(entity =>
         {
-            entity.Property(e => e.Id)
-                .HasMaxLength(15)
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasMaxLength(15);
             entity.Property(e => e.NextQuestionId).HasMaxLength(15);
+            entity.Property(e => e.QuestionText).IsRequired();
         });
 
         modelBuilder.Entity<QuestionsOption>(entity =>
@@ -57,16 +85,17 @@ public partial class HobbySwipeContext : DbContext
 
             entity.ToTable("Questions.Options");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.NextQuestionId).HasMaxLength(15);
+            entity.Property(e => e.OptionText).IsRequired();
             entity.Property(e => e.QuestionId)
+                .IsRequired()
                 .HasMaxLength(15)
                 .HasColumnName("QuestionID");
 
             entity.HasOne(d => d.Question).WithMany(p => p.QuestionsOptions)
                 .HasForeignKey(d => d.QuestionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Questions__Quest__1AD3FDA4");
+                .HasConstraintName("FK__Questions__Quest__3864608B");
         });
 
         OnModelCreatingPartial(modelBuilder);
