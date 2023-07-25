@@ -1,15 +1,16 @@
 ﻿@model HobbySwipe.Models.ResultsRoot
  
 @section Styles {
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300&family=Poppins&family=REM&family=Raleway:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="~/css/discover-results.css">
 }
 
 <section id="section_discover_results">
     <div class="results">
         <div class="results--status">
-            <i class="fa fa-remove"></i>
-            <i class="fa fa-heart"></i>
-            <i class="fa fa-user"></i>
+            <i class="fa-solid fa-thumbs-down fa-flip-horizontal"></i>
+            <i class="fa-solid fa-heart"></i>
+            <i class="fa-solid fa-thumbs-up"></i>
         </div>
 
         <div class="results--cards">
@@ -20,9 +21,9 @@
                     <p>@result.Reasoning</p>
 
                     <div class="results--buttons">
-                        <button id="nope"><i class="fa fa-remove"></i></button>
-                        <button id="love"><i class="fa fa-heart"></i></button>
-                        <button id="fav"><i class="fa fa-user"></i></button>
+                        <button id="dislike" title="I don't like it"><i class="fa-solid fa-thumbs-down fa-flip-horizontal"></i></button>
+                        <button id="favorite" title="Add to favorites"><i class="fa-solid fa-heart"></i></button>
+                        <button id="like" title="I like it"><i class="fa-solid fa-thumbs-up"></i></button>
                     </div>
                 </div>
             }

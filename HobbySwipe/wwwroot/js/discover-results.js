@@ -11,8 +11,12 @@ function initCards() {
 
     // Apply a series of transformations to each card
     newCards.forEach(function (card, index) {
+        var isLandscape = window.innerWidth / window.innerHeight > 1;
+        var isMobileOrTablet = window.innerWidth <= 1024;
+        var translateY = (isLandscape && isMobileOrTablet) ? 15 * index : 20 * index;
+
         card.style.zIndex = allCards.length - index;
-        card.style.transform = 'scale(' + (20 - index) / 20 + ') translateY(-' + 30 * index + 'px)';
+        card.style.transform = 'scale(' + (20 - index) / 20 + ') translateY(-' + translateY + 'px)';
         card.style.opacity = (10 - index) / 10;
     });
 
@@ -33,11 +37,11 @@ function createButtonListener(action) {
         card.classList.add('removed');
 
         // Apply the appropriate transformations based on the action
-        if (action === 'love') {
-            card.style.transform = 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)';
-        } else if (action === 'nope') {
-            card.style.transform = 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)';
-        } else if (action === 'fav') {
+        if (action === 'like') {
+            card.style.transform = 'translate(' + moveOutWidth + 'px, -10000px) rotate(-30deg)';
+        } else if (action === 'dislike') {
+            card.style.transform = 'translate(-' + moveOutWidth + 'px, -10000px) rotate(30deg)';
+        } else if (action === 'favorite') {
             card.style.transform = 'translate(0px, -' + moveOutWidth + 'px) rotate(30deg)';
         }
 
@@ -59,20 +63,20 @@ allCards.forEach(function (el) {
     }, { passive: false });
 
     // Get the buttons for this card
-    var nope = el.querySelector('#nope');
-    var love = el.querySelector('#love');
-    var fav = el.querySelector('#fav');
+    var dislike = el.querySelector('#dislike');
+    var like = el.querySelector('#like');
+    var favorite = el.querySelector('#favorite');
     var btnCtnr = el.querySelector('.results--buttons');
-    var interactiveElements = [nope, love, fav, btnCtnr];
+    var interactiveElements = [dislike, like, favorite, btnCtnr];
 
     // Create and attach the button listeners
-    var nopeListener = createButtonListener('nope');
-    var loveListener = createButtonListener('love');
-    var favListener = createButtonListener('fav');
+    var dislikeListener = createButtonListener('dislike');
+    var likeListener = createButtonListener('like');
+    var favoriteListener = createButtonListener('favorite');
 
-    nope.addEventListener('click', nopeListener);
-    love.addEventListener('click', loveListener);
-    fav.addEventListener('click', favListener);
+    dislike.addEventListener('click', dislikeListener);
+    like.addEventListener('click', likeListener);
+    favorite.addEventListener('click', favoriteListener);
 
     var hammertime = new Hammer(el);
     hammertime.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 0, touchAction: 'none' });
@@ -108,15 +112,15 @@ allCards.forEach(function (el) {
 
         // If swipe up
         if (event.deltaY < 0 && Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-            // Remove 'love' and 'nope' classes, add 'fav' class
-            resultsContainer.classList.remove('results_love', 'results_nope');
-            resultsContainer.classList.add('results_fav');
+            // Remove 'like' and 'dislike' classes, add 'favorite' class
+            resultsContainer.classList.remove('results_like', 'results_dislike');
+            resultsContainer.classList.add('results_favorite');
         }
         else {
-            // Remove 'fav' class, add 'love' or 'nope' class based on direction
-            resultsContainer.classList.remove('results_fav');
-            resultsContainer.classList.toggle('results_love', event.deltaX > 0);
-            resultsContainer.classList.toggle('results_nope', event.deltaX < 0);
+            // Remove 'favorite' class, add 'like' or 'dislike' class based on direction
+            resultsContainer.classList.remove('results_favorite');
+            resultsContainer.classList.toggle('results_like', event.deltaX > 0);
+            resultsContainer.classList.toggle('results_dislike', event.deltaX < 0);
         }
 
         // Apply transformations to the card
@@ -130,7 +134,7 @@ allCards.forEach(function (el) {
     // On 'panend', determine whether to keep the card or discard it
     hammertime.on('panend', function (event) {
         el.classList.remove('moving');
-        resultsContainer.classList.remove('results_love', 'results_nope', 'results_fav');
+        resultsContainer.classList.remove('results_like', 'results_dislike', 'results_favorite');
 
         var moveOutWidth = document.body.clientWidth;
         var keep = (Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5) && (event.deltaY >= -80 || Math.abs(event.velocityY) < 0.5);
@@ -141,9 +145,9 @@ allCards.forEach(function (el) {
             event.target.style.transform = '';
         } else {
             // Remove the event listeners
-            nope.removeEventListener('click', nopeListener);
-            love.removeEventListener('click', loveListener);
-            fav.removeEventListener('click', favListener);
+            dislike.removeEventListener('click', dislikeListener);
+            like.removeEventListener('click', likeListener);
+            favorite.removeEventListener('click', favoriteListener);
 
             // Determine the final location of the card
             var endX = Math.max(Math.abs(event.velocityX) * moveOutWidth, moveOutWidth);
@@ -169,9 +173,9 @@ allCards.forEach(function (el) {
 
 // Map keys to actions
 var keyActions = {
-    'ArrowLeft': 'nope',
-    'ArrowRight': 'love',
-    'ArrowUp': 'fav'
+    'ArrowLeft': 'dislike',
+    'ArrowRight': 'like',
+    'ArrowUp': 'favorite'
 };
 
 window.addEventListener('keydown', function (event) {
@@ -184,11 +188,11 @@ window.addEventListener('keydown', function (event) {
 
         card.classList.add('removed');
 
-        if (action === 'love') {
+        if (action === 'like') {
             card.style.transform = 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)';
-        } else if (action === 'nope') {
+        } else if (action === 'dislike') {
             card.style.transform = 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)';
-        } else if (action === 'fav') {
+        } else if (action === 'favorite') {
             card.style.transform = 'translate(0px, -' + moveOutWidth + 'px) rotate(30deg)';
         }
 

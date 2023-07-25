@@ -1,11 +1,8 @@
 :root {
     --font-size: 0.8em;
-    --primary-color: #b9c2ae;
-    --secondary-color: #48b2e1;
-    --background-color-1: #243743;
-    --background-color-2: #243743;
-    --accent-color: #121b21;
-    --text-color: #dee7ef;
+    --primary-color: #272426;
+    --secondary-color: #e2e2e4;
+    --accent-color: #78a6e3;
     --green: #2ecc71;
     --purple: #9b59b6;
     --gold: #f1c40f;
@@ -105,14 +102,15 @@ html {
 
 body {
     margin-bottom: 60px;
-    font-family: 'IBM Plex Sans', sans-serif;
-    background-color: var(--background-color-1);
-    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 h1, h2, h3, h4, h5 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: var(--primary-color);
+    font-family: 'REM', sans-serif;
+    color: var(--secondary-color);
+    letter-spacing: .05rem;
 }
 
 h1 {
@@ -156,36 +154,36 @@ section.darker {
 
 /* Look and feel */
 .btn-primary {
-    color: var(--background-color-1);
+    color: var(--secondary-color);
     background-color: var(--primary-color);
     border-color: var(--primary-color);
     box-shadow: none;
 }
 
     .btn-primary:hover {
-        color: var(--background-color-1);
-        background-color: var(--secondary-color);
-        background-color: var(--secondary-color);
+        color: var(--secondary-color);
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
         box-shadow: none;
     }
 
     .btn-primary:active {
-        color: var(--background-color-1);
+        color: var(--primary-color);
         background-color: var(--secondary-color);
         background-color: var(--secondary-color);
     }
 
 .btn-secondary {
-    color: var(--background-color-1);
+    color: var(--primary-color);
     background-color: var(--secondary-color);
     border-color: var(--secondary-color);
     box-shadow: none;
 }
 
     .btn-secondary:hover {
-        color: var(--background-color-1);
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
         box-shadow: none;
     }
 
@@ -211,6 +209,10 @@ section.darker {
     color: var(--secondary-color) !important;
 }
 
+.text-accent {
+    color: var(--accent-color) !important;
+}
+
 .bg-primary {
     background-color: var(--primary-color) !important;
 }
@@ -219,12 +221,8 @@ section.darker {
     background-color: var(--secondary-color) !important;
 }
 
-.bg-color-1 {
-    background-color: var(--background-color-1) !important;
-}
-
-.bg-color-2 {
-    background-color: var(--background-color-2) !important;
+.bg-accent {
+    background-color: var(--accent-color) !important;
 }
 
 .parallax {
@@ -232,4 +230,25 @@ section.darker {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+/* Tooltips */
+.tooltip.expand:before {
+    transform: scale3d(.2,.2,1);
+    transition: all .2s ease-in-out;
+}
+
+.tooltip.expand:after {
+    transform: translate3d(0,6px,0);
+    transition: all .1s ease-in-out;
+}
+
+.tooltip.expand:hover:before,
+.tooltip.expand:hover:after {
+    opacity: 1;
+    transform: scale3d(1,1,1);
+}
+
+.tooltip.expand:hover:after {
+    transition: all .2s .1s ease-in-out;
 }

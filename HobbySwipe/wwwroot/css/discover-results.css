@@ -15,6 +15,7 @@
 	position: relative;
 	opacity: 0;
 	transition: opacity 0.1s ease-in-out;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 .loaded.results {
@@ -41,17 +42,20 @@
 		margin-left: -50px;
 	}
 
-.results_love .fa-heart {
+.results_like .fa-thumbs-up {
 	opacity: 0.7;
 	transform: scale(1);
 }
 
-.results_nope .fa-remove {
+.results_dislike .fa-thumbs-down {
 	opacity: 0.7;
-	transform: scale(1);
+	-moz-transform: scale(-1, 1);
+	-o-transform: scale(-1, 1);
+	-webkit-transform: scale(-1, 1);
+	transform: scale(-1, 1);
 }
 
-.results_fav .fa-user {
+.results_favorite .fa-heart {
 	opacity: 0.7;
 	transform: scale(1);
 }
@@ -66,12 +70,14 @@
 }
 
 .results--card {
-	display: inline-block;
-	width: 90vw;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	padding: 2rem;
 	max-width: 400px;
-	height: 70vh;
-	background: #FFFFFF;
-	padding-bottom: 40px;
+	height: 75vh;
+	max-height: 70vh;
+	background: var(--secondary-color);
 	border-radius: 8px;
 	overflow: hidden;
 	position: absolute;
@@ -80,6 +86,17 @@
 	cursor: -webkit-grab;
 	cursor: -moz-grab;
 	cursor: grab;
+}
+
+.results--buttons button {
+	border-radius: 50%;
+	line-height: 60px;
+	width: 60px;
+	border: 0;
+	background: #FFFFFF;
+	display: inline-block;
+	margin: 0 8px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Add a shadow for depth */
 }
 
 .moving.results--card {
@@ -95,23 +112,25 @@
 }
 
 .results--card h3 {
-	margin-top: 32px;
-	font-size: 32px;
-	padding: 0 16px;
+	margin: 0.5rem 0;
 	pointer-events: none;
+	color: var(--primary-color);
+	line-height: 1;
+	margin-bottom: 1rem;
 }
 
 .results--card p {
-	margin-top: 24px;
-	font-size: 20px;
-	padding: 0 16px;
+	margin: 0.5rem 0;
 	pointer-events: none;
+	color: var(--primary-color);
 }
 
 .results--buttons {
-	flex: 0 0 100px;
-	text-align: center;
-	padding-top: 20px;
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	margin-top: auto;
 }
 
 	.results--buttons button {
@@ -133,22 +152,133 @@
 		vertical-align: middle;
 	}
 
+.fa-thumbs-up {
+	color: #43A047;
+}
+
+.fa-thumbs-down {
+	color: #B71C1C;
+}
+
 .fa-heart {
-	color: #FFACE4;
-}
-
-.fa-remove {
-	color: #CDD6DD;
-}
-
-.fa-user {
-	color: green;
+	color: #FEA6E0;
 }
 
 footer, .navbar {
 	display: none;
 }
 
-.ignore-pointer {
-	pointer-events: none;
+/* The adjustments for tablet landscape screen */
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+	.results--card {
+		width: 95vw;
+		max-width: 400px;
+		max-height: 80vh;
+		padding: 1rem;
+	}
+
+		.results--card p {
+			font-size: calc(0.75rem + 0.3vw);
+			margin: 0.2rem 0;
+		}
+
+	.results--buttons button {
+		line-height: 50px;
+		width: 50px;
+	}
+}
+
+/* The adjustments for tablet portrait screen */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+	.results--card {
+		max-width: 80vw;
+		height: 100vh;
+	}
+}
+
+/* The adjustments for phone landscape screen */
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+	.results--card {
+		width: 95vw;
+		max-width: 400px;
+		max-height: 90vh;
+		height: 95vh;
+		padding: 1rem;
+	}
+
+		.results--card p {
+			font-size: calc(0.75rem + 0.3vw);
+			margin: 0.2rem 0;
+		}
+
+	.results--buttons button {
+		line-height: 40px;
+		width: 40px;
+	}
+
+	.results--buttons i {
+		font-size: 25px;
+	}
+}
+
+/* The adjustments for phone portrait screen */
+@media only screen and (min-width: 301px) and (max-width: 575px) {
+	.results--card {
+		width: 90vw;
+		height: 75vh;
+	}
+		.results--card h3 {
+			font-size: 2rem;
+		}
+
+		.results--card p {
+			font-size: 1rem;
+		}
+
+	.results--buttons button {
+		line-height: 40px;
+		width: 40px;
+	}
+
+	.results--buttons i {
+		font-size: 25px;
+	}
+}
+
+/* The adjustments for small resolution phone portrait screen */
+@media only screen and (max-width: 300px) {
+	.results--card {
+		width: 90vw;
+		max-height: 85vh;
+		height: 80vh;
+	}
+
+		.results--card h3 {
+			font-size: 1.6rem;
+		}
+
+		.results--card p {
+			font-size: 0.85rem;
+		}
+
+	.results--buttons button {
+		line-height: 40px;
+		width: 40px;
+	}
+
+	.results--buttons i {
+		font-size: 25px;
+	}
+}
+
+/* The adjustments for small resolution phone landscape screen */
+@media only screen and (max-height: 300px) {
+	.results--buttons button {
+		line-height: 40px;
+		width: 40px;
+	}
+
+	.results--buttons i {
+		font-size: 25px;
+	}
 }

@@ -1,10 +1,6 @@
 ﻿/* Typography Settings */
-#typed {
-    color: var(--secondary-color);
-}
-
 .typed-cursor {
-    color: var(--primary-color);
+    color: var(--accent-color);
     margin-left: 5px;
 }
 
@@ -13,28 +9,8 @@
     border: none;
 }
 
-/* Section Divider Styles */
-.slanted-divider.top {
-    border-top: 100px solid transparent;
-}
-.slanted-divider.bottom {
-    border-bottom: 100px solid transparent;
-}
-
-.slanted-divider.left {
-    border-left: 100vw solid transparent;
-}
-
-.slanted-divider.right {
-    border-right: 100vw solid transparent;
-}
-
-.slanted-divider.bg-1 {
-    border-block-color: var(--background-color-1);
-}
-
-.slanted-divider.bg-2 {
-    border-block-color: var(--background-color-2);
+.hero-header {
+    line-height: 1;
 }
 
 /* Style for Step Marker */
@@ -42,10 +18,13 @@
     font-weight: bold;
     padding: 15px 20px;
     border-radius: 50%;
-    background-color: var(--secondary-color);
-    color: #4D4545;
+    background-color: var(--accent-color);
+    color: var(--secondary-color);
     max-height: 50px;
     z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* How it works section */
@@ -65,7 +44,7 @@
         .how-it-works.row .col-2::after {
             content: '';
             position: absolute;
-            border-left: 3px solid var(--secondary-color);
+            border-left: 3px solid var(--accent-color);
             z-index: 1;
         }
 
@@ -97,6 +76,10 @@
             top: 0;
         }
 
+        .how-it-works h5 {
+            color: var(--accent-color);
+        }
+
 /* Timeline Styles */
 .timeline div {
     padding: 0;
@@ -104,7 +87,7 @@
 }
 
 .timeline hr {
-    border-top: 3px solid var(--secondary-color);
+    border-top: 3px solid var(--accent-color);
     margin: 0;
     top: 17px;
     position: relative;
@@ -117,7 +100,7 @@
 }
 
 .timeline .corner {
-    border: 3px solid var(--secondary-color);
+    border: 3px solid var(--accent-color);
     width: 100%;
     position: relative;
     border-radius: 15px;
@@ -176,4 +159,8 @@
 .iphone-container {
     max-width: 200px;
     margin: 0 auto;
+}
+
+.btn:hover {
+    transform: scale(1.05);
 }
