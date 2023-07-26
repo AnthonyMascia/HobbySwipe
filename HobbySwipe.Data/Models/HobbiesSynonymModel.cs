@@ -6,7 +6,7 @@ namespace HobbySwipe.Data.Models
     {
         public int Id { get; set; }
 
-        public int HobbyId { get; set; }
+        public string HobbyId { get; set; }
 
         public string Synonym { get; set; }
 

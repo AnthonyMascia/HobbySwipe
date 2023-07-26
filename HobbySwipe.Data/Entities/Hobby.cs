@@ -1,12 +1,13 @@
-﻿namespace HobbySwipe.Data.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace HobbySwipe.Data.Entities;
 
 public partial class Hobby
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     public string Name { get; set; }
-
-    public string Slug { get; set; }
 
     public string Description { get; set; }
 

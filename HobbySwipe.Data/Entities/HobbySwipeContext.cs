@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace HobbySwipe.Data.Entities;
 
@@ -46,10 +48,13 @@ public partial class HobbySwipeContext : DbContext
 
         modelBuilder.Entity<HobbiesSynonym>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Hobbies.__3214EC0732D1D5A4");
+            entity.HasKey(e => e.Id).HasName("PK__Hobbies.__3214EC07B5E8FC15");
 
             entity.ToTable("Hobbies.Synonyms");
 
+            entity.Property(e => e.HobbyId)
+                .IsRequired()
+                .HasMaxLength(100);
             entity.Property(e => e.Synonym)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -57,17 +62,15 @@ public partial class HobbySwipeContext : DbContext
             entity.HasOne(d => d.Hobby).WithMany(p => p.HobbiesSynonyms)
                 .HasForeignKey(d => d.HobbyId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Hobbies.S__Hobby__3B40CD36");
+                .HasConstraintName("FK__Hobbies.S__Hobby__5F7E2DAC");
         });
 
         modelBuilder.Entity<Hobby>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Hobbies__3214EC071C2013D9");
+            entity.HasKey(e => e.Id).HasName("PK__Hobbies__3214EC07723417E8");
 
+            entity.Property(e => e.Id).HasMaxLength(100);
             entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.Slug)
                 .IsRequired()
                 .HasMaxLength(255);
         });

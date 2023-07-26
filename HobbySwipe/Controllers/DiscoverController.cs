@@ -8,6 +8,7 @@ using OpenAI.ObjectModels.RequestModels;
 using OpenAI;
 using AutoMapper;
 using HobbySwipe.Data.Models;
+using System.IO;
 
 namespace HobbySwipe.Controllers
 {
@@ -125,13 +126,15 @@ namespace HobbySwipe.Controllers
 
             var openAiService = new OpenAIService(new OpenAiOptions()
             {
-               
+                ApiKey = System.IO.File.ReadAllText(@"C:\temp\HobbySwipe\api-key.txt")
             });
+
+            var prompt = System.IO.File.ReadAllLines(@"C:\temp\HobbySwipe\prompt.txt");
 
             var messages = new List<ChatMessage>
             {
-                ChatMessage.FromSystem("You are Hobbix, an innovative and imaginative assistant with a deep understanding of various hobbies and interests. Your primary purpose is to provide personalized hobby recommendations tailored to each individual's preferences. Your recommendations will be both unique and creative, combining your knowledge of different hobbies with a keen understanding of the user's interests. Whether it's discovering new passions, honing existing skills, or exploring uncharted territories, you are here to guide and inspire users on their hobby journey. With your wealth of expertise and a touch of creativity, you'll help users uncover exciting hobbies they never knew they would love."),
-                ChatMessage.FromUser("I am excited to embark on a journey of discovering new hobbies with your guidance, Hobbix. To start our quest, I will provide you with a series of questions along with my answers to them. These questions are designed to help you understand my interests and preferences better. Based on this information, I kindly request your expertise in recommending me some exciting hobbies that align with my passions. I trust your ability to think outside the box and offer unique suggestions that will ignite my curiosity and bring joy to my leisure time. Let's dive into this hobby-seeking adventure together!")
+                ChatMessage.FromSystem(prompt[0]),
+                ChatMessage.FromUser(prompt[1])
             };
 
             for (var i = 0; i < answers.Count(); i++)
@@ -143,8 +146,7 @@ namespace HobbySwipe.Controllers
                 messages.Add(ChatMessage.FromUser(chatText));
             }
 
-            messages.Add(ChatMessage.FromUser(
-                "Based on my preferences, I kindly request your expert opinion, Hobbix, to provide me with the top 5 hobbies you believe I would thoroughly enjoy. Along with the results, I would greatly appreciate a descriptive yet concise blurb about each recommended hobby, highlighting why it might resonate with me. Feel free to reference any of my previous answers if they influenced your decision-making process. To ensure convenience and readability, please present the results in a JSON format where the list of hobbies will contain two fields: 'Hobby' and 'Reasoning.' Your insightful recommendations and personalized explanations will help me make an informed choice and embark on exciting new hobby adventures. I eagerly await your suggestions! Remember to please only suggest 5 hobbies in one singular JSON structure. The root of the structure should be called 'Results'."));
+            messages.Add(ChatMessage.FromUser(prompt[2]));
 
             var completionResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
             {
@@ -156,6 +158,9 @@ namespace HobbySwipe.Controllers
             {
                 var results = completionResult.Choices.First().Message.Content;
                 TempData["Results"] = results;
+
+                // Parse the results. See if we need to add any new hobbies to the database.
+                var resultsObj = JsonConvert.DeserializeObject<ResultsRoot>((string)TempData["Results"]);
 
                 return Json(new { url = Url.Action(nameof(Results), "Discover") });
             }
@@ -181,6 +186,12 @@ namespace HobbySwipe.Controllers
                 Question = previousQuestion,
                 Answer = previousAnswer
             });
+        }
+
+        [HttpPost]
+        public IActionResult ProcessResults()
+        {
+            return null;
         }
     }
 

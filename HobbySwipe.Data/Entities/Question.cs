@@ -1,4 +1,7 @@
-﻿namespace HobbySwipe.Data.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace HobbySwipe.Data.Entities;
 
 public partial class Question
 {
@@ -10,7 +13,7 @@ public partial class Question
 
     public string NextQuestionId { get; set; }
 
-    public virtual ICollection<Answer> Answers { get; set; }
+    public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
 
-    public virtual ICollection<QuestionsOption> QuestionsOptions { get; set; }
+    public virtual ICollection<QuestionsOption> QuestionsOptions { get; set; } = new List<QuestionsOption>();
 }
