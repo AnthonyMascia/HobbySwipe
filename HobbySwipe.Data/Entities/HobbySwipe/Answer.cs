@@ -1,4 +1,4 @@
-﻿namespace HobbySwipe.Data.Entities;
+﻿namespace HobbySwipe.Data.Entities.HobbySwipe;
 
 public partial class Answer
 {

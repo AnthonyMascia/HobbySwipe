@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace HobbySwipe.Data.Entities;
+namespace HobbySwipe.Data.Entities.HobbySwipe;
 
 public partial class HobbySwipeContext : DbContext
 {

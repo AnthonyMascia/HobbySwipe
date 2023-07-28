@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using HobbySwipe.Data.Entities;
-using HobbySwipe.Data.Models;
+using HobbySwipe.Data.Entities.HobbySwipe;
+using HobbySwipe.Data.Models.HobbySwipe;
 
 namespace HobbySwipe.Services
 {

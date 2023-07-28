@@ -1,6 +1,6 @@
-﻿using HobbySwipe.Data.Entities;
+﻿using HobbySwipe.Data.Entities.HobbySwipe;
 
-namespace HobbySwipe.Data.Models
+namespace HobbySwipe.Data.Models.HobbySwipe
 {
     public class QuestionsOptionModel
     {

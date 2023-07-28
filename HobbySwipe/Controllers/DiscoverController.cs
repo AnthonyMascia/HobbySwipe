@@ -7,7 +7,7 @@ using OpenAI.Managers;
 using OpenAI.ObjectModels.RequestModels;
 using OpenAI;
 using AutoMapper;
-using HobbySwipe.Data.Models;
+using HobbySwipe.Data.Models.HobbySwipe;
 using System.IO;
 
 namespace HobbySwipe.Controllers

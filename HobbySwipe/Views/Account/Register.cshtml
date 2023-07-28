@@ -1,0 +1,83 @@
+﻿@model HobbySwipe.ViewModels.Account.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/login.css" />
+}
+
+<!--Main Navigation-->
+<header>
+    <!--Intro Section-->
+    <section class="view intro-2">
+        <div id="login_mask" class="mask rgba-stylish-strong h-100 d-flex justify-content-center align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-6 col-md-10 col-sm-12 mx-auto mt-lg-5">
+
+                        <!--Form with header-->
+                        <div class="card wow fadeIn" data-wow-delay="0.3s">
+                            <div class="card-body">
+
+                                <!--Header-->
+                                <div class="form-header akrf-color with-form">
+                                    <h3 class="m-0">New Account</h3>
+                                </div>
+
+                                <!--Body-->
+                                <form id="form_register" asp-controller="Account" asp-action="Register" method="post" enctype="multipart/form-data" role="form">
+                                    <div asp-validation-summary="All" class="small"></div>
+
+                                    <input asp-for="ReturnUrl" type="hidden" />
+
+                                    <div class="md-form">
+                                        <i class="fas fa-envelope prefix white-text"></i>
+                                        <label asp-for="Email" class="force-active"></label>
+                                        <input asp-for="Email" class="form-control mb-0" autocomplete="chrome-off" />
+                                        <span asp-validation-for="Email"></span>
+                                    </div>
+
+                                    <div class="md-form">
+                                        <i class="fas fa-lock prefix white-text"></i>
+                                        <label asp-for="Password" class="force-active"></label>
+                                        <input asp-for="Password" class="form-control mb-0" autocomplete="chrome-off" />
+                                        <span asp-validation-for="Password"></span>
+                                    </div>
+
+                                    <div class="md-form">
+                                        <i class="fas fa-redo prefix white-text"></i>
+                                        <label asp-for="ConfirmPassword" class="force-active"></label>
+                                        <input asp-for="ConfirmPassword" class="form-control mb-0" autocomplete="chrome-off" />
+                                        <span asp-validation-for="ConfirmPassword"></span>
+                                    </div>
+
+                                    <div class="text-center btn-ctnr">
+                                        <button class="btn btn-akrf w-50" onclick="FormHelpers.General.ShowLoader();$('#form_register').submit();FormHelpers.General.HideLoader();">
+                                            Register
+                                        </button>
+                                    </div>
+
+                                    <div class="text-center small return-ctnr">
+                                        <a asp-controller="Account" asp-action="Login">Go back to login page</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--/Form with header-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</header>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            new WOW().init();
+        });
+    </script>
+}

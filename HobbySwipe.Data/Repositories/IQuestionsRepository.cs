@@ -1,4 +1,4 @@
-﻿using HobbySwipe.Data.Entities;
+﻿using HobbySwipe.Data.Entities.HobbySwipe;
 using Microsoft.EntityFrameworkCore;
 
 namespace HobbySwipe.Data.Repositories

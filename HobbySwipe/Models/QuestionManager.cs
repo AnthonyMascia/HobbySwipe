@@ -1,4 +1,4 @@
-﻿using HobbySwipe.Data.Models;
+﻿using HobbySwipe.Data.Models.HobbySwipe;
 
 namespace HobbySwipe.Models
 {
