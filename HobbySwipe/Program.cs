@@ -5,7 +5,6 @@ using HobbySwipe.Data.Entities.Authentication;
 using HobbySwipe.Data.Entities.HobbySwipe;
 using HobbySwipe.Data.Repositories;
 using HobbySwipe.Services;
-using MathNet.Numerics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,7 +50,7 @@ builder.Services.AddAuthentication()
 // Add services to the container.
 builder.Services.AddSingleton<IConfigurationRoot>(configuration);
 builder.Services.AddSingleton(autoMapper);
-builder.Services.AddScoped<IQuestionsRepository, QuestionsRepository>();
+builder.Services.AddScoped<IHobbySwipeRepository, HobbySwipeRepository>();
 builder.Services.AddControllersWithViews();
 
 // Setup options for Identity.

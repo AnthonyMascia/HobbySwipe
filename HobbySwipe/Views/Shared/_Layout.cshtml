@@ -813,7 +813,19 @@
                 </ul>
                 <ul class="navbar-nav d-lg-block d-none">
                     <li class="nav-item">
-                        <a href="" class="btn btn-sm btn-primary mb-0 me-1">Find Hobbies Now</a>
+                        <a asp-controller="Discover" asp-action="Discover" class="btn btn-sm btn-accent mb-0 me-1">Find Hobbies Now</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav d-lg-block d-none">
+                    <li class="nav-item">
+                        @if (User.Identity.IsAuthenticated) {
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                <button type="submit" class="btn btn-sm btn-primary mb-0 me-1">Logout</button>
+                            </form>
+                        }
+                        else {
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-primary mb-0 me-1">Login</a>
+                        }
                     </li>
                 </ul>
             </div>
@@ -853,6 +865,7 @@
     <!--   Core JS Files   -->
     <script src="~/lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="https://kit.fontawesome.com/505f49b160.js" crossorigin="anonymous"></script>
+    <script src="~/lib/material-kit-pro/dist/js/core/popper.min.js" type="text/javascript"></script>
     <script src="~/lib/material-kit-pro/dist/js/core/bootstrap.min.js" type="text/javascript"></script>
     <script src="~/lib/material-kit-pro/dist/js/material-kit-pro.min.js" type="text/javascript"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>

@@ -10,9 +10,13 @@ namespace HobbySwipe.Models
 
     public class Result
     {
+        [JsonProperty("Category")]
+        public string Category { get; set; }
         [JsonProperty("Hobby")]
         public string Hobby { get; set; }
-        [JsonProperty("Reasoning")]
-        public string Reasoning { get; set; }
+        [JsonProperty("Description")]
+        public string Description { get; set; }
+        [JsonProperty("Attributes")]
+        public string[] Attributes { get; set; }
     }
 }

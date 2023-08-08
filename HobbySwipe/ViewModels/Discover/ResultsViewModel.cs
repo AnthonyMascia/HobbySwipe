@@ -1,14 +1,12 @@
-﻿using HobbySwipe.Data.Entities.HobbySwipe;
-
-namespace HobbySwipe.ViewModels.Discover
+﻿namespace HobbySwipe.ViewModels.Discover
 {
     public class ResultsViewModel
     {
-        public string[] Results  { get; set; }
+        public string[] Results { get; set; }
 
         public ResultsViewModel()
         {
-            
+
         }
 
         public ResultsViewModel(string[] Results)

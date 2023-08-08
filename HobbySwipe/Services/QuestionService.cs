@@ -1,6 +1,4 @@
-﻿using HobbySwipe.Models;
-
-namespace HobbySwipe.Services
+﻿namespace HobbySwipe.Services
 {
     //public class QuestionService
     //{

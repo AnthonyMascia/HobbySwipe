@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace HobbySwipe.Data.Entities.HobbySwipe;
+﻿namespace HobbySwipe.Data.Entities.HobbySwipe;
 
 public partial class Question
 {

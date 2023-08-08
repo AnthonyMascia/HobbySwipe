@@ -1,5 +1,4 @@
-﻿using HobbySwipe.Models;
-using HobbySwipe.ViewModels.Account;
+﻿using HobbySwipe.ViewModels.Account;
 using HobbySwipe.ViewModels.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -35,6 +34,7 @@ namespace HobbySwipe.Controllers
         /******************************************************************************************************************/
         /*** LOGIN                                                                                                      ***/
         /******************************************************************************************************************/
+
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
@@ -266,7 +266,7 @@ namespace HobbySwipe.Controllers
                     _logger.LogError("Error loading external login information during confirmation.");
                     return View("Error", new ErrorViewModel(errorMessage: "Error loading external login information during confirmation."));
                 }
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true }; // todo: change 'EmailConfirmed' when email works
+                var user = new IdentityUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true }; // TODO: change 'EmailConfirmed' when email works
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -447,8 +447,8 @@ namespace HobbySwipe.Controllers
                     {
                         UserName = model.Email,
                         Email = model.Email,
-                        EmailConfirmed = true, // todo: change 'EmailConfirmed' when email works
-                        TwoFactorEnabled = false, // todo: change this to true when email works
+                        EmailConfirmed = true, // TODO: change 'EmailConfirmed' when email works
+                        TwoFactorEnabled = false, // TODO: change this to true when email works
                     };
 
                     var result = await _userManager.CreateAsync(user, model.Password);
@@ -699,6 +699,9 @@ namespace HobbySwipe.Controllers
                 return RedirectToAction();
             }
         }
+
+
+
 
         /******************************************************************************************************************/
         /*** PASSWORD RESET REQUEST                                                                                     ***/
@@ -965,6 +968,8 @@ namespace HobbySwipe.Controllers
         /*** LOCKOUT                                                                                                    ***/
         /******************************************************************************************************************/
 
+
+
         [HttpGet("[action]")]
         public IActionResult Lockout(string returnUrl = null)
         {
@@ -987,6 +992,8 @@ namespace HobbySwipe.Controllers
                 return View("Error", new ErrorViewModel(errorMessage: $"{ex.Message}"));
             }
         }
+
+
 
         /******************************************************************************************************************/
         /*** CONTROLLER HELPER METHODS                                                                                  ***/

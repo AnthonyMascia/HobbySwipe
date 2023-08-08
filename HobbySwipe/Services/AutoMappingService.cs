@@ -8,14 +8,37 @@ namespace HobbySwipe.Services
     {
         public AutoMappingService()
         {
-            CreateMap<Answer, AnswerModel>().ReverseMap();
+            /******************************/
+            /*** Hobbies and Categories ***/
+            /******************************/
 
-            CreateMap<Hobby, HobbyModel>()
-                .ForMember(dest => dest.HobbiesSynonyms,
-                           opts => opts.MapFrom(src => src.HobbiesSynonyms))
+            CreateMap<Data.Entities.HobbySwipe.Attribute, AttributeModel>().ReverseMap();
+
+            CreateMap<Category, CategoryModel>()
+                .ForMember(dest => dest.CategoriesHobbies,
+                           opts => opts.MapFrom(src => src.CategoriesHobbies))
                 .ReverseMap();
 
-            CreateMap<HobbiesSynonym, HobbiesSynonymModel>().ReverseMap();
+            CreateMap<CategoriesHobby, CategoriesHobbyModel>()
+                .ForMember(dest => dest.CategoriesHobbiesSynonyms,
+                           opts => opts.MapFrom(src => src.CategoriesHobbiesSynonyms))
+                .ForMember(dest => dest.CategoriesHobbiesAttributes,
+                           opts => opts.MapFrom(src => src.CategoriesHobbiesAttributes))
+                .ReverseMap();
+
+            CreateMap<CategoriesHobbiesAttribute, CategoriesHobbiesAttributeModel>().ReverseMap();
+
+            CreateMap<CategoriesHobbiesSynonym, CategoriesHobbiesSynonymModel>().ReverseMap();
+
+            CreateMap<Category, CategoryModel>().ReverseMap();
+
+
+
+            /*****************************/
+            /*** Questions and Answers ***/
+            /*****************************/
+
+            CreateMap<Answer, AnswerModel>().ReverseMap();
 
             CreateMap<Question, QuestionModel>()
                 .ForMember(dest => dest.QuestionsOptions,
@@ -23,6 +46,21 @@ namespace HobbySwipe.Services
                 .ReverseMap();
 
             CreateMap<QuestionsOption, QuestionsOptionModel>().ReverseMap();
+
+
+
+            /******************/
+            /*** User Input ***/
+            /******************/
+
+            CreateMap<Data.Entities.HobbySwipe.Action, ActionModel>().ReverseMap();
+
+            CreateMap<UserHobbyPreference, UserHobbyPreferenceModel>()
+                .ForMember(dest => dest.UserHobbyPreferencesHistories,
+                           opts => opts.MapFrom(src => src.UserHobbyPreferencesHistories))
+                .ReverseMap();
+
+            CreateMap<UserHobbyPreferencesHistory, UserHobbyPreferencesHistoryModel>().ReverseMap();
         }
     }
 }
