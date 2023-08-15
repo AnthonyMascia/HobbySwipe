@@ -18,5 +18,8 @@ namespace HobbySwipe.Models
         public string Description { get; set; }
         [JsonProperty("Attributes")]
         public string[] Attributes { get; set; }
+
+        // Custom attributes
+        public string HobbyId  { get; set; }
     }
 }

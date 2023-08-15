@@ -1,4 +1,6 @@
-﻿namespace HobbySwipe.Data.Models.HobbySwipe
+﻿using HobbySwipe.Data.Entities.HobbySwipe;
+
+namespace HobbySwipe.Data.Models.HobbySwipe
 {
     public class CategoriesHobbyModel
     {
@@ -17,6 +19,8 @@
         public DateTime AddedDate { get; set; }
 
         public DateTime? LastUpdatedDate { get; set; }
+
+        public virtual CategoryModel Category { get; set; }
 
         public virtual ICollection<CategoriesHobbiesAttributeModel> CategoriesHobbiesAttributes { get; set; } = new List<CategoriesHobbiesAttributeModel>();
 

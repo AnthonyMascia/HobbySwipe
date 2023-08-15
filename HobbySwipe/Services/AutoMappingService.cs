@@ -20,6 +20,8 @@ namespace HobbySwipe.Services
                 .ReverseMap();
 
             CreateMap<CategoriesHobby, CategoriesHobbyModel>()
+                .ForMember(dest => dest.Category,
+                           opts => opts.MapFrom(src => src.Category))
                 .ForMember(dest => dest.CategoriesHobbiesSynonyms,
                            opts => opts.MapFrom(src => src.CategoriesHobbiesSynonyms))
                 .ForMember(dest => dest.CategoriesHobbiesAttributes,

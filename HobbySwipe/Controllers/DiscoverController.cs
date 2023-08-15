@@ -3,6 +3,7 @@ using FuzzySharp;
 using HobbySwipe.Data.Entities.HobbySwipe;
 using HobbySwipe.Data.Models.HobbySwipe;
 using HobbySwipe.Data.Repositories;
+using HobbySwipe.Extensions;
 using HobbySwipe.Models;
 using HobbySwipe.ViewModels.Discover;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,8 @@ namespace HobbySwipe.Controllers
         public async Task<IActionResult> Discover()
         {
             _logger.LogInformation("Discover action called");
+            HttpContext.Session.Remove("ProcessedHobbies");
+
             if (_questionManager == null)
             {
                 // Initialize QuestionManager if it's not already done
@@ -61,7 +64,7 @@ namespace HobbySwipe.Controllers
                 Answer = new AnswerModel
                 {
                     QuestionId = firstQuestion.Id,
-                    UserId = Guid.NewGuid() // TODO: grab user's real ID
+                    UserId = User.GetUserId()
                 },
                 IsFirstQuestion = true
             });
@@ -71,29 +74,50 @@ namespace HobbySwipe.Controllers
         public IActionResult Results()
         {
             _logger.LogInformation("Results action called");
+            HttpContext.Session.Remove("ProcessedHobbies");
 
-            //if (TempData["Results"] == null)
-            //{
-            //    return RedirectToAction("Discover");
-            //}
-
-            //var results = JsonConvert.DeserializeObject<ResultsRoot>((string)TempData["Results"]);
-
-            var results = new ResultsRoot
+            if (TempData["Results"] == null)
             {
-                Results = new List<Models.Result>
-                {
-                    new Models.Result { Hobby = "Puzzle solving", Description = "Based on your preference for thinking hard and enjoying indoor activities, puzzle solving can be a perfect fit for you. With your skills and talent for problem-solving, you can delve into various types of puzzles like crosswords, sudoku, riddles, and brain teasers. It's a mentally stimulating hobby that challenges your intellect, enhances your cognitive abilities, and provides a sense of accomplishment." },
-                    new Models.Result { Hobby = "Writing", Description = "For a solo player like you who enjoys thinking critically, writing can be a fulfilling hobby. Whether it's journaling, creative writing, or even blogging, writing allows you to express your thoughts, unleash your creativity, and delve into self-reflection. You can explore various genres, improve your writing skills, and even consider publishing your work in the future, aligning with your interest in making money from your hobby." },
-                    new Models.Result { Hobby = "Learning a musical instrument", Description = "If you're looking for a hobby that combines mental engagement with creativity and self-expression, learning a musical instrument can offer a great avenue. Whether it's the piano, guitar, or any instrument that resonates with you, playing music can be a beautiful journey. You can start with online tutorials, join virtual communities, and gradually progress to playing your favorite tunes, providing relaxation and a sense of accomplishment." },
-                    new Models.Result { Hobby = "Photography", Description = "As someone who enjoys indoor activities but seeks to meet new people, photography can be an excellent choice. With your interest in capturing meaningful moments, you can immerse yourself in the world of photography. Explore different techniques, master composition, and seek out local photography groups or workshops to connect with like-minded individuals. Photography allows you to express your creativity, document your experiences, and capture the beauty around you." },
-                    new Models.Result { Hobby = "Coding/Programming", Description = "Given your penchant for thinking hard and your interest in utilizing your skills and talents, coding or programming can be an exciting hobby to consider. Engaging with coding challenges, learning different programming languages, and developing your own projects can provide both a mental workout and a sense of accomplishment. It also opens up opportunities for you to create useful tools or applications that align with your values, be it sustainability or community impact." }
-                }
-            };
+                return RedirectToAction("Discover");
+            }
 
+            var results = JsonConvert.DeserializeObject<ResultsRoot>((string)TempData["Results"]);
+            TempData.Remove("Results");
             _logger.LogInformation("Results data created");
 
             return View(results);
+        }
+
+
+        [HttpGet("[controller]/Results/Review")]
+        public async Task<IActionResult> Review()
+        {
+            _logger.LogInformation("Review action called");
+
+            //var processedHobbies = HttpContext.Session.Get<Dictionary<string, int>>("ProcessedHobbies");
+
+            var processedHobbies = new Dictionary<string, int>
+            {
+                { "singing", 1 },
+                { "dance", 2 },
+                { "running", 1 },
+                { "sculpture", 0 },
+                { "homebrewing", 0 },
+            };
+
+            if (processedHobbies == null || !processedHobbies.Any())
+            {
+                return RedirectToAction("Discover");
+            }
+
+            HttpContext.Session.Remove("ProcessedHobbies");
+            var allHobbies = _mapper.Map<IEnumerable<CategoriesHobbyModel>>(await _repos.GetHobbiesWithCategoryAsync());
+            var matchedHobbies = allHobbies.Where(x => processedHobbies.Keys.Contains(x.Id)).ToList();
+            var likedHobbies = matchedHobbies.Where(x => processedHobbies[x.Id] == 1).ToList();
+            var dislikedHobbies = matchedHobbies.Where(x => processedHobbies[x.Id] == 0).ToList();
+            var favoritedHobbies = matchedHobbies.Where(x => processedHobbies[x.Id] == 2).ToList();
+
+            return View(new ReviewViewModel(likedHobbies, dislikedHobbies,favoritedHobbies));
         }
 
 
@@ -128,7 +152,7 @@ namespace HobbySwipe.Controllers
                     Answer = new AnswerModel
                     {
                         QuestionId = nextQuestion.Id,
-                        UserId = Guid.NewGuid() // TODO: grab user's real ID
+                        UserId = User.GetUserId()
                     }
                 });
             }
@@ -144,107 +168,166 @@ namespace HobbySwipe.Controllers
         {
             _logger.LogInformation("ProcessAnswers action called");
             var answers = _questionManager.GetAnswers();
-            var categories = _mapper.Map<IEnumerable<CategoryModel>>(await _repos.GetCategoriesAsync());
             var hobbies = _mapper.Map<IEnumerable<CategoriesHobbyModel>>(await _repos.GetHobbiesAsync());
-            var attributes = _mapper.Map<IEnumerable<AttributeModel>>(await _repos.GetAttributesAsync());
 
-            var openAiService = InitializeOpenAIService();
-            var messages = ConstructHobbyRecPrompt(categories, answers);
-            var completionResult = await SendToOpenAI(messages, openAiService);
-
-            if (completionResult.Successful)
+            // If the user is not authenticated, return 5 randomly selected hobbies
+            if (!User.Identity.IsAuthenticated)
             {
-                // Extract the AI-generated response and store it in an object to be parsed.
-                _logger.LogInformation("AI response received. Parsing the results");
-                var results = completionResult.Choices.First().Message.Content;
-                var resultsObj = JsonConvert.DeserializeObject<ResultsRoot>(results);
-
-                // Create a set of existing attribute IDs for efficient lookup
-                var existingAttributeIds = new HashSet<string>(attributes.Select(a => a.Id));
-
-                // Lists to batch database operations
-                var attributesToAdd = new List<Data.Entities.HobbySwipe.Attribute>();
-                var hobbiesToAdd = new List<CategoriesHobby>();
-
-                foreach (var item in resultsObj.Results)
+                var randomHobbies = hobbies.OrderBy(h => Guid.NewGuid()).Take(5).ToList();
+                var resultsObj = new ResultsRoot
                 {
-                    // Check and add new attributes
-                    foreach (var attr in item.Attributes)
+                    Results = new List<Models.Result>()
+                };
+
+                foreach (var hobby in randomHobbies)
+                {
+                    resultsObj.Results.Add(new Models.Result
                     {
-                        var attributeId = GenerateAttributeId(attr);
-
-                        if (!existingAttributeIds.Contains(attributeId))
-                        {
-                            var newAttribute = new AttributeModel
-                            {
-                                Id = attributeId,
-                                Name = attr
-                            };
-
-                            attributesToAdd.Add(_mapper.Map<Data.Entities.HobbySwipe.Attribute>(newAttribute));
-                        }
-                    }
-
-                    var existingHobby = GetClosestMatch(item.Hobby, hobbies.ToList());
-
-                    if (existingHobby == null)
-                    {
-                        var newHobby = await CreateNewHobby(item, openAiService);
-                        if (newHobby != null) { hobbiesToAdd.Add(_mapper.Map<CategoriesHobby>(newHobby)); }
-                    }
-                    else
-                    {
-
-                    }
+                        HobbyId = hobby.Id,
+                        Hobby = hobby.Name,
+                        Description = hobby.Description,
+                        Category = hobby.CategoryId
+                    });
                 }
 
-                // Batch save Attrbiutes to the database
-                if (attributesToAdd.Any())
-                {
-                    _repos.AddRange(attributesToAdd);
-                    await _repos.SaveAllAsync();
-                }
+                // Save the results to TempData to be passed to the Results view
+                TempData["Results"] = JsonConvert.SerializeObject(resultsObj);
 
-                // Batch save Hobbies to the database
-                if (hobbiesToAdd.Any())
-                {
-                    _repos.AddRange(hobbiesToAdd);
-                    await _repos.SaveAllAsync();
-                }
-
-                // Parse the results and check if there are any new hobbies to add to the database
-                TempData["Results"] = results;
+                // Simulate API processing
+                Thread.Sleep(5000);
 
                 // Redirect to the Results action
                 _logger.LogInformation("Redirecting to the Results action");
                 return Json(new { url = Url.Action(nameof(Results), "Discover") });
             }
+            // Else, call the API and get tailored hobbies specific to the user
+            else
+            {
+                var categories = _mapper.Map<IEnumerable<CategoryModel>>(await _repos.GetCategoriesAsync());
+                var attributes = _mapper.Map<IEnumerable<AttributeModel>>(await _repos.GetAttributesAsync());
+                var openAiService = InitializeOpenAIService();
+                var messages = ConstructHobbyRecPrompt(categories, answers);
+                var completionResult = await SendToOpenAI(messages, openAiService);
 
-            // If the call to the OpenAI API is not successful, log an error and return null
-            // TODO: Implement proper error handling
-            _logger.LogError("Error in AI response");
-            return null;
+                if (completionResult.Successful)
+                {
+                    // Extract the AI-generated response and store it in an object to be parsed.
+                    _logger.LogInformation("AI response received. Parsing the results");
+                    var results = completionResult.Choices.First().Message.Content;
+                    var resultsObj = JsonConvert.DeserializeObject<ResultsRoot>(results);
+
+                    // Create a set of existing attribute IDs for efficient lookup
+                    var existingAttributeIds = new HashSet<string>(attributes.Select(a => a.Id));
+
+                    // Lists to batch database operations
+                    var attributesToAdd = new List<Data.Entities.HobbySwipe.Attribute>();
+                    var hobbiesToAdd = new List<CategoriesHobby>();
+
+                    foreach (var item in resultsObj.Results)
+                    {
+                        // Check and add new attributes
+                        foreach (var attr in item.Attributes)
+                        {
+                            var attributeId = GenerateAttributeId(attr);
+
+                            if (!existingAttributeIds.Contains(attributeId))
+                            {
+                                var newAttribute = new AttributeModel
+                                {
+                                    Id = attributeId,
+                                    Name = attr
+                                };
+
+                                attributesToAdd.Add(_mapper.Map<Data.Entities.HobbySwipe.Attribute>(newAttribute));
+                            }
+                        }
+
+                        var existingHobby = GetClosestMatch(item.Hobby, hobbies.ToList());
+
+                        if (existingHobby == null)
+                        {
+                            var newHobby = await CreateNewHobby(item, openAiService);
+                            if (newHobby != null) { hobbiesToAdd.Add(_mapper.Map<CategoriesHobby>(newHobby)); }
+                            item.HobbyId = newHobby.Id;
+                        }
+                        else
+                        {
+                            item.HobbyId = existingHobby.Id;
+                        }
+                    }
+
+                    // Batch save Attributes to the database
+                    if (attributesToAdd.Any())
+                    {
+                        _repos.AddRange(attributesToAdd);
+                        await _repos.SaveAllAsync();
+                    }
+
+                    // Batch save Hobbies to the database
+                    if (hobbiesToAdd.Any())
+                    {
+                        _repos.AddRange(hobbiesToAdd);
+                        await _repos.SaveAllAsync();
+                    }
+
+                    // Save the results to TempData to be passed to the Results view
+                    TempData["Results"] = JsonConvert.SerializeObject(resultsObj);
+
+                    // Redirect to the Results action
+                    _logger.LogInformation("Redirecting to the Results action");
+                    return Json(new { url = Url.Action(nameof(Results), "Discover") });
+                }
+
+                // If the call to the OpenAI API is not successful, log an error and return null
+                // TODO: Implement proper error handling
+                _logger.LogError("Error in AI response");
+                return null;
+            }
         }
 
         [HttpPost]
-        public IActionResult ProcessResult(int resultType)
+        public async Task<JsonResult> ProcessResult(int actionId, string hobbyId)
         {
             _logger.LogInformation("ProcessResult action called");
 
-            switch (resultType)
+            // Save the results to session storage for tracking purposes (both for logged in and anonymous users)
+            try
             {
-                // Dislike
-                case 0:
-                    break;
-                // Like
-                case 1:
-                    break;
-                // Favorite
-                default:
-                    break;
+                var preferences = HttpContext.Session.Get<Dictionary<string, int>>("ProcessedHobbies") ?? new Dictionary<string, int>();
+                preferences[hobbyId] = actionId;
+                HttpContext.Session.Set("ProcessedHobbies", preferences);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, errorMessage = "Error saving to session: " + ex.Message });
             }
 
-            return null; // Or redirect to appropriate view
+            // If the user is signed in, save to the database
+            if (User.Identity.IsAuthenticated)
+            {
+                try
+                {
+                    var preference = new UserHobbyPreferenceModel
+                    {
+                        UserId = User.GetUserId(),
+                        HobbyId = hobbyId,
+                        ActionId = actionId,
+                        DateProcessed = DateTime.Now
+                    };
+
+                    _repos.Add(_mapper.Map<UserHobbyPreference>(preference));
+                    await _repos.SaveAllAsync();
+
+                    return Json(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, errorMessage = "Error saving to database: " + ex.Message });
+                }
+            }
+
+            // For non-authenticated users, just return success since we've already saved their preference in session
+            return Json(new { success = true });
         }
 
         [HttpPost]
@@ -364,6 +447,9 @@ namespace HobbySwipe.Controllers
                     CategoryId = item.Category,
                     Name = item.Hobby,
                     Description = newHobbyResultsObj.Description,
+                    IsActive = true,
+                    AddedBy = User.GetUserId(),
+                    AddedDate = DateTime.Now,
                     CategoriesHobbiesAttributes = newAttributes
                 };
             }
@@ -386,6 +472,5 @@ namespace HobbySwipe.Controllers
             // If not, return null or any appropriate value indicating no match found
             return null;
         }
-
     }
 }

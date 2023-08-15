@@ -1,8 +1,11 @@
 ﻿@model HobbySwipe.Models.ResultsRoot
  
 @section Styles {
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300&family=Poppins&family=REM&family=Raleway:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="~/css/discover-results.css">
+}
+
+@{
+    ViewData["Title"] = "Results";
 }
 
 <section id="section_discover_results">
@@ -16,7 +19,7 @@
         <div class="results--cards">
             @foreach (var result in Model.Results)
             {
-                <div class="results--card">
+                <div class="results--card" data-hobby-id="@result.HobbyId">
                     <h3>@result.Hobby</h3>
                     <p>@result.Description</p>
 

@@ -188,7 +188,7 @@ public partial class HobbySwipeContext : DbContext
 
         modelBuilder.Entity<UserHobbyPreference>(entity =>
         {
-            entity.HasKey(e => e.PreferenceId).HasName("PK__User.Hob__E228496FF15E2D16");
+            entity.HasKey(e => new { e.UserId, e.HobbyId }).HasName("PK__User.Hob__F7232CF0F4A0BB91");
 
             entity.ToTable("User.HobbyPreferences");
 
@@ -196,24 +196,26 @@ public partial class HobbySwipeContext : DbContext
 
             entity.HasIndex(e => e.UserId, "idx_UserHobbyPreferences_UserId");
 
+            entity.Property(e => e.HobbyId).HasMaxLength(100);
             entity.Property(e => e.DateProcessed)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.HobbyId).HasMaxLength(100);
-            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.PreferenceId).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.Action).WithMany(p => p.UserHobbyPreferences)
                 .HasForeignKey(d => d.ActionId)
-                .HasConstraintName("FK__User.Hobb__Actio__5B78929E");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__User.Hobb__Actio__7167D3BD");
 
             entity.HasOne(d => d.Hobby).WithMany(p => p.UserHobbyPreferences)
                 .HasForeignKey(d => d.HobbyId)
-                .HasConstraintName("FK__User.Hobb__Hobby__5A846E65");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__User.Hobb__Hobby__7073AF84");
         });
 
         modelBuilder.Entity<UserHobbyPreferencesHistory>(entity =>
         {
-            entity.HasKey(e => e.HistoryId).HasName("PK__User.Hob__4D7B4ABD9E6B34AF");
+            entity.HasKey(e => e.HistoryId).HasName("PK__User.Hob__4D7B4ABD83EB4879");
 
             entity.ToTable("User.HobbyPreferences.History");
 
@@ -225,20 +227,25 @@ public partial class HobbySwipeContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.DateProcessed).HasColumnType("datetime");
-            entity.Property(e => e.HobbyId).HasMaxLength(100);
+            entity.Property(e => e.HobbyId)
+                .IsRequired()
+                .HasMaxLength(100);
             entity.Property(e => e.UserId).IsRequired();
 
             entity.HasOne(d => d.Action).WithMany(p => p.UserHobbyPreferencesHistories)
                 .HasForeignKey(d => d.ActionId)
-                .HasConstraintName("FK__User.Hobb__Actio__61316BF4");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__User.Hobb__Actio__7720AD13");
 
             entity.HasOne(d => d.Hobby).WithMany(p => p.UserHobbyPreferencesHistories)
                 .HasForeignKey(d => d.HobbyId)
-                .HasConstraintName("FK__User.Hobb__Hobby__603D47BB");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__User.Hobb__Hobby__762C88DA");
 
-            entity.HasOne(d => d.Preference).WithMany(p => p.UserHobbyPreferencesHistories)
-                .HasForeignKey(d => d.PreferenceId)
-                .HasConstraintName("FK__User.Hobb__Prefe__5F492382");
+            entity.HasOne(d => d.UserHobbyPreference).WithMany(p => p.UserHobbyPreferencesHistories)
+                .HasForeignKey(d => new { d.UserId, d.HobbyId })
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__User.HobbyPrefer__753864A1");
         });
 
         OnModelCreatingPartial(modelBuilder);

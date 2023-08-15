@@ -5,11 +5,29 @@ namespace HobbySwipe.Data.Repositories
 {
     public interface IHobbySwipeRepository
     {
-        public Task<IEnumerable<Question>> GetQuestionsAsync();
-        public Task<IEnumerable<Category>> GetCategoriesAsync();
-        public Task<IEnumerable<Category>> GetCategoriesWithChildrenAsync();
-        public Task<IEnumerable<CategoriesHobby>> GetHobbiesAsync();
-        public Task<IEnumerable<Entities.HobbySwipe.Attribute>> GetAttributesAsync();
+        /******************************************************************************************************************/
+        /*** QUESTIONS / ANSWERS                                                                                        ***/
+        /******************************************************************************************************************/
+        Task<IEnumerable<Question>> GetQuestionsAsync();
+
+
+
+        /******************************************************************************************************************/
+        /*** CATEGORIES / HOBBIES / ATTRIBUTES                                                                          ***/
+        /******************************************************************************************************************/
+        Task<IEnumerable<Category>> GetCategoriesAsync();
+        Task<IEnumerable<Category>> GetCategoriesWithChildrenAsync();
+        Task<IEnumerable<CategoriesHobby>> GetHobbiesAsync();
+        Task<IEnumerable<CategoriesHobby>> GetHobbiesWithCategoryAsync();
+        Task<IEnumerable<Entities.HobbySwipe.Attribute>> GetAttributesAsync();
+
+
+
+        /******************************************************************************************************************/
+        /*** USER RESULTS                                                                                               ***/
+        /******************************************************************************************************************/
+
+
 
 
         /******************************************************************************************************************/
@@ -32,10 +50,22 @@ namespace HobbySwipe.Data.Repositories
             _ctx = ctx;
         }
 
+
+
+        /******************************************************************************************************************/
+        /*** QUESTIONS / ANSWERS                                                                                        ***/
+        /******************************************************************************************************************/
+
         public async Task<IEnumerable<Question>> GetQuestionsAsync()
         {
             return await _ctx.Questions.Include(x => x.QuestionsOptions).ToListAsync();
         }
+
+
+
+        /******************************************************************************************************************/
+        /*** CATEGORIES / HOBBIES / ATTRIBUTES                                                                          ***/
+        /******************************************************************************************************************/
 
         public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
@@ -50,6 +80,11 @@ namespace HobbySwipe.Data.Repositories
         public async Task<IEnumerable<CategoriesHobby>> GetHobbiesAsync()
         {
             return await _ctx.CategoriesHobbies.ToListAsync();
+        }
+
+        public async Task<IEnumerable<CategoriesHobby>> GetHobbiesWithCategoryAsync()
+        {
+            return await _ctx.CategoriesHobbies.Include(x => x.Category).ToListAsync();
         }
 
         public async Task<IEnumerable<Entities.HobbySwipe.Attribute>> GetAttributesAsync()

@@ -5,6 +5,7 @@ using HobbySwipe.Data.Entities.Authentication;
 using HobbySwipe.Data.Entities.HobbySwipe;
 using HobbySwipe.Data.Repositories;
 using HobbySwipe.Services;
+using MathNet.Numerics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<HobbySwipeContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("HobbySwipeConnection")), ServiceLifetime.Scoped);
 
+// Add session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+});
+
 // Add Identity authentication.
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
@@ -45,7 +53,6 @@ builder.Services.AddAuthentication()
         options.ClientId = File.ReadAllLines(configuration["Authentication:Google:ClientId"])[0];
         options.ClientSecret = File.ReadAllLines(configuration["Authentication:Google:ClientSecret"])[0];
     });
-
 
 // Add services to the container.
 builder.Services.AddSingleton<IConfigurationRoot>(configuration);
@@ -70,8 +77,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.AllowedForNewUsers = true;
 
     // User settings.
-    options.User.AllowedUserNameCharacters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
 });
 
@@ -102,6 +108,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseSession();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

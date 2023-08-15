@@ -9,24 +9,30 @@ function initCards() {
     // Select the new cards that are not removed
     var newCards = document.querySelectorAll('.results--card:not(.removed)');
 
-    // Apply a series of transformations to each card
-    newCards.forEach(function (card, index) {
-        var isLandscape = window.innerWidth / window.innerHeight > 1;
-        var isMobileOrTablet = window.innerWidth <= 1024;
-        var translateY = (isLandscape && isMobileOrTablet) ? 15 * index : 20 * index;
+    if (newCards.length === 0) {
+        window.location.href = '/Results/Review';
+    }
+    else {
+        // Apply a series of transformations to each card
+        newCards.forEach(function (card, index) {
+            var isLandscape = window.innerWidth / window.innerHeight > 1;
+            var isMobileOrTablet = window.innerWidth <= 1024;
+            var translateY = (isLandscape && isMobileOrTablet) ? 15 * index : 20 * index;
 
-        card.style.zIndex = allCards.length - index;
-        card.style.transform = 'scale(' + (20 - index) / 20 + ') translateY(-' + translateY + 'px)';
-        card.style.opacity = (10 - index) / 10;
-    });
+            card.style.zIndex = allCards.length - index;
+            card.style.transform = 'scale(' + (20 - index) / 20 + ') translateY(-' + translateY + 'px)';
+            card.style.opacity = (10 - index) / 10;
+        });
 
-    // Add the 'loaded' class to the results container
-    resultsContainer.classList.add('loaded');
+        // Add the 'loaded' class to the results container
+        resultsContainer.classList.add('loaded');
+    }
 }
 
 // Function to create a button listener
 function createButtonListener(action) {
     return function (event) {
+        var actionId = 0;
         var cards = document.querySelectorAll('.results--card:not(.removed)');
         var moveOutWidth = document.body.clientWidth * 1.5;
 
@@ -38,12 +44,18 @@ function createButtonListener(action) {
 
         // Apply the appropriate transformations based on the action
         if (action === 'like') {
+            actionId = 1;
             card.style.transform = 'translate(' + moveOutWidth + 'px, -10000px) rotate(-30deg)';
         } else if (action === 'dislike') {
+            actionId = 0;
             card.style.transform = 'translate(-' + moveOutWidth + 'px, -10000px) rotate(30deg)';
         } else if (action === 'favorite') {
+            actionId = 2;
             card.style.transform = 'translate(0px, -' + moveOutWidth + 'px) rotate(30deg)';
         }
+
+        var hobbyId = event.target.closest('.results--card').getAttribute('data-hobby-id');
+        saveUserPreference(actionId, hobbyId);
 
         // Initialize the next set of cards
         initCards();
@@ -144,6 +156,21 @@ allCards.forEach(function (el) {
         if (keep) {
             event.target.style.transform = '';
         } else {
+            // Get the action ID depending on swipe direction
+            var actionId = 0;
+            var hobbyId = event.target.closest('.results--card').getAttribute('data-hobby-id');
+
+            if (event.deltaX > 0) {
+                actionId = 1; // Like
+            } else if (event.deltaX < 0) {
+                actionId = 0; // Dislike
+            } else if (event.deltaY < 0 && Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+                actionId = 2; // Favorite
+            }
+
+            // Save the preference to the database
+            saveUserPreference(actionId, hobbyId);
+
             // Remove the event listeners
             dislike.removeEventListener('click', dislikeListener);
             like.removeEventListener('click', likeListener);
@@ -180,6 +207,11 @@ var keyActions = {
 
 window.addEventListener('keydown', function (event) {
     var action = keyActions[event.key];
+    var actionId = 0;
+    var cardElement = document.querySelector('.results--card:not(.removed)');
+    console.log(cardElement);
+    var hobbyId = cardElement.getAttribute('data-hobby-id');
+
     if (action) {
         var cards = document.querySelectorAll('.results--card:not(.removed)');
         if (!cards.length) return false;
@@ -189,13 +221,38 @@ window.addEventListener('keydown', function (event) {
         card.classList.add('removed');
 
         if (action === 'like') {
+            actionId = 1;
             card.style.transform = 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)';
         } else if (action === 'dislike') {
+            actionId = 0;
             card.style.transform = 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)';
         } else if (action === 'favorite') {
+            actionId = 2;
             card.style.transform = 'translate(0px, -' + moveOutWidth + 'px) rotate(30deg)';
         }
+        saveUserPreference(actionId, hobbyId);
 
         initCards();
     }
 });
+
+function saveUserPreference(actionId, hobbyId) {
+    console.log(actionId);
+  
+    $.ajax({
+        url: '/Discover/ProcessResult',
+        type: 'POST',
+        data: {
+            actionId: actionId,
+            hobbyId: hobbyId
+        },
+        success: function (response) {
+            if (!response.success) {
+                console.error(response.errorMessage);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error(textStatus, errorThrown);
+        }
+    });
+}

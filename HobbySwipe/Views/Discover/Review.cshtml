@@ -1,0 +1,104 @@
+﻿@model HobbySwipe.ViewModels.Discover.ReviewViewModel
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/discover-review.css">
+}
+
+@{
+    ViewData["Title"] = "Review";
+}
+
+<section class="pt-10 pb-8">
+    <div class="container text-center">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <h2>
+                Hey there, <span class="text-accent">@User.Identity.Name</span>!<br>
+            </h2>
+            <p>
+                We have your hobby results ready for you. You can go ahead and adjust your preferences below if you changed your mind on something. Once you've fine-tuned everything to your liking, you can click the button below to see <i>all</i> your hobby picks. Enjoy your journey!
+            </p>
+        }
+        else
+        {
+            <h2>
+                Ahoy, <span class="text-accent">hobby explorer</span>!<br>
+            </h2>
+            <p>
+                We have your hobby results ready for you below, <b class="text-accent">however we noticed you're not signed in</b>.<br>
+                To get the most out of your hobby adventure, please sign in or create an account. Having an account means your hobby recommendations get more personalized with each visit. Plus, you can easily access past preferences, track your hobby journey, and enjoy a tailored experience. It's like having a personal hobby guide, always ready to help you explore new passions. Don't miss out on the full experience – dive in and make the most of your adventure!<br><br>
+                Thank you for supporting us and using <b class="text-accent">HobbySwipe</b>!
+            </p>
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-lg btn-secondary">Register</button>
+                    <button type="button" class="btn btn-lg btn-accent">Sign In</button>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<section class="py-6 darker">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-3">Here are the hobbies you <span class="text-accent">favorited</span> <i class="fa-solid fa-heart"></i></h2>
+            </div>
+            <div id="ctnr_fav" class="col-md-12 p-0">
+                @if (Model.HobbiesFavorited != null && Model.HobbiesFavorited.Any())
+                {
+                    <div class="row justify-content-center">
+                        @foreach (var fav in Model.HobbiesFavorited)
+                        {
+                            @await Html.PartialAsync("_ReviewHobby.Partial", fav, new ViewDataDictionary(ViewData) { { "ActionType", "fav" } })
+                        }
+                    </div>
+                }
+            </div>            
+        </div>
+    </div>
+</section>
+<section class="py-6">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-3">Here are the hobbies you <span class="text-accent">liked</span> <i class="fa-solid fa-thumbs-up"></i></h2>
+            </div>
+            <div id="ctnr_liked" class="col-md-12 p-0">
+                @if (Model.HobbiesLiked != null && Model.HobbiesLiked.Any())
+                {
+                    <div class="row justify-content-center">
+                        @foreach (var liked in Model.HobbiesLiked)
+                        {
+                            @await Html.PartialAsync("_ReviewHobby.Partial", liked, new ViewDataDictionary(ViewData) { { "ActionType", "liked" } })
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<section class="py-6 darker">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-3">Here are the hobbies you <span class="text-accent">disliked</span> <i class="fa-solid fa-thumbs-down"></i></h2>
+            </div>
+            <div id="ctnr_disliked" class="col-md-12 p-0">
+                @if (Model.HobbiesDisliked != null && Model.HobbiesDisliked.Any())
+                {
+                    <div class="row justify-content-center">
+                        @foreach (var fav in Model.HobbiesDisliked)
+                        {
+                            @await Html.PartialAsync("_ReviewHobby.Partial", fav, new ViewDataDictionary(ViewData) { { "ActionType", "disliked" } })
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/discover-review.js"></script>
+}

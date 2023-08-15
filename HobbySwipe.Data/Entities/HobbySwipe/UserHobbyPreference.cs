@@ -8,7 +8,7 @@ public partial class UserHobbyPreference
 
     public string HobbyId { get; set; }
 
-    public int? ActionId { get; set; }
+    public int ActionId { get; set; }
 
     public DateTime DateProcessed { get; set; }
 
